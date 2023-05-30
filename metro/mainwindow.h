@@ -5,6 +5,7 @@
 #include <QPushButton>
 #include <QMainWindow>
 #include <QDebug>
+#include <QStatusBar>
 
 #include "navigator/Navigator.h"
 #include "stationbutton.h"
@@ -12,6 +13,11 @@
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
+
+enum navigator_state {
+    AWAIT_BEGIN,
+    AWAIT_END
+};
 
 class MainWindow : public QMainWindow
 {
@@ -25,6 +31,14 @@ private:
     Ui::MainWindow *ui;
     Navigator *navigator;
     StationList *stationList;
+    void HandleStationButtonPress(station_id id);
+    void ShowButton(station_id, bool show = 1);
+    void HideAllButtons();
+
+    navigator_state navState;
+
+    station_id begin;
+
     std::vector<StationButton> stationButtons = {
         StationButton(PARNAS, 260, 40),
         StationButton(PROSPEKT_PROSVESHCHENIYA, 260, 70),
@@ -99,6 +113,6 @@ private:
         StationButton(PROSPEKT_BOLSHEVIKOV, 550, 540),
         StationButton(ULITSA_DYBENKO, 580, 570),
     };
-    std::vector<QPushButton *> stationButtonPtrs;
+    std::map<station_id, QPushButton *> stationButtonPtrs;
 };
 #endif // MAINWINDOW_H
