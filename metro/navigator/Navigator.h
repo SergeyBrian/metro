@@ -17,6 +17,8 @@ public:
     int findAllRoutes(station_id current, station_id end, Route *route);
 
     StationList *stationList;
+
+    void forgetRoutes();
 };
 
 

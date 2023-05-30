@@ -39,3 +39,7 @@ int Navigator::findAllRoutes(station_id current, station_id end, Route *route) {
 
     return 0;
 }
+
+void Navigator::forgetRoutes() {
+    routes.clear();
+}
