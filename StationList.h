@@ -4,12 +4,16 @@
 #include <map>
 
 #include "Station.h"
+#include "Route.h"
 
 
 class StationList {
 public:
     StationList();
+
     Station *getStation(station_id id);
+
+    void printRoute(Route *route);
 
 private:
     std::map<station_id, Station *> stationsList;

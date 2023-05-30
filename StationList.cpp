@@ -126,3 +126,12 @@ StationList::StationList() {
 Station *StationList::getStation(station_id id) {
     return stationsList.at(id);
 }
+
+void StationList::printRoute(Route *route) {
+        for (auto &station_id: route->path) {
+            Station *station = this->getStation(station_id);
+            std::cout << station->name;
+            if (station_id != route->path.back()) std::cout << " -> ";
+        }
+        std::cout << "\n";
+}
