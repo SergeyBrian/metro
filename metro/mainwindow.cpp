@@ -28,7 +28,8 @@ MainWindow::MainWindow(QWidget *parent)
 //      button->setStyleSheet("QPushButton { background-color: transparent; border: none; }");
         this->stationButtonPtrs.push_back(button);
         connect(button, &QPushButton::clicked, [=](){
-            qDebug() << buttonInfo.id << "\n";
+            std::string station_name = stationList->getStation(buttonInfo.id)->name;
+            qDebug() << station_name.c_str() << "\n";
         });
     }
 }
