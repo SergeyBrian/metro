@@ -14,6 +14,21 @@ namespace metro {
             int x = biasedRandomInt(0, 100);
             int y = biasedRandomInt(0, 100);
 
+            int distanceOk = true;
+            for (const auto &station: stations) {
+                if ((station.pos.x - x) * (station.pos.x - x) + (station.pos.y - y) * (station.pos.y - y) <=
+                    params.min_distance * params.min_distance) {
+                    distanceOk = false;
+                    break;
+                }
+            }
+
+            if (!distanceOk) {
+                std::printf("[INFO] Skipping point at %d %d\n", x, y);
+                i--;
+                continue;
+            }
+
             sum_x += x;
             sum_y += y;
             stations.push_back({
@@ -56,7 +71,7 @@ namespace metro {
             branches[i] = branch;
         }
 
-        for (const auto &[id, branch]: branches) {
+        for (auto &[id, branch]: branches) {
             std::vector<Station *> branch_stations;
             for (auto &station: stations) {
                 if (distanceToLineSegment(station.pos, branch.begin->pos, branch.end->pos) >
@@ -74,6 +89,7 @@ namespace metro {
             for (int i = 0; i < branch_stations.size() - 1; i++) {
                 bindStations(branch_stations[i], branch_stations[i + 1]);
             }
+            branch.stations_count = static_cast<int>(branch_stations.size());
         }
     }
 

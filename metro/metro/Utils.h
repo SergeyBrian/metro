@@ -19,6 +19,8 @@ namespace metro {
     int distanceToLineSegment(const Position &p, const Position &a, const Position &b);
 
     float invSqrt(float number);
+
+    double projectionParameter(const Position &point, const Position &lineStart, const Position &lineEnd);
 }
 
 #endif //METRO_UTILS_H

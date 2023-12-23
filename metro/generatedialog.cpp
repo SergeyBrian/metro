@@ -23,22 +23,16 @@ void GenerateDialog::on_buttonBox_accepted() {
     stationsCount = ui->stationsSpinBox->value();
     branchesCount = ui->branchesSpinBox->value();
     branchThreshold = ui->branchThresholdSpinBox->value();
+    minDistance = ui->minDistanceSpinBox->value();
     seed = ui->seedLineEdit->text();
 }
 
-int GenerateDialog::getBranchesCount() const {
-    return branchesCount;
-}
-
-int GenerateDialog::getStationsCount() const {
-    return stationsCount;
-}
-
-int GenerateDialog::getBranchThreshold() const {
-    return branchThreshold;
-}
-
-QString GenerateDialog::getSeed() {
-    return seed;
+metro::Params GenerateDialog::getParams() const {
+    return {
+            .branch_count = branchesCount,
+            .stations_count = stationsCount,
+            .branch_threshold = branchThreshold,
+            .min_distance = minDistance,
+    };
 }
 

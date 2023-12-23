@@ -100,15 +100,7 @@ double MetroWindow::getRealY(int y) {
 void MetroWindow::on_actionNew_triggered() {
     auto genDialog = new GenerateDialog(this);
     if (!genDialog->exec()) return;
-    int stationsCount = genDialog->getStationsCount();
-    int branchesCount = genDialog->getBranchesCount();
-    int branchThreshold = genDialog->getBranchThreshold();
-    QString seed = genDialog->getSeed();
-    metro->generate(metro::Params{
-            .branch_count  = branchesCount,
-            .stations_count = stationsCount,
-            .branch_threshold = branchThreshold,
-    });
+    metro->generate(genDialog->getParams());
     redraw();
 }
 

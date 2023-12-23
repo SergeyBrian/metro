@@ -9,6 +9,7 @@
 namespace metro {
     struct Branch {
         int id;
+        int stations_count;
         Color color;
         Station *begin;
         Station *end;

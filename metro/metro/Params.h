@@ -6,6 +6,7 @@ namespace metro {
         int branch_count;
         int stations_count;
         int branch_threshold;
+        int min_distance;
     };
 }
 

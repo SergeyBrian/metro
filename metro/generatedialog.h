@@ -5,6 +5,8 @@
 
 #include "ui_generatedialog.h"
 
+#include "metro/Metro.h"
+
 namespace Ui {
     class GenerateDialog;
 }
@@ -15,13 +17,7 @@ Q_OBJECT
 public:
     explicit GenerateDialog(QWidget *parent = nullptr);
 
-    int getBranchesCount() const;
-
-    int getStationsCount() const;
-
-    int getBranchThreshold() const;
-
-    QString getSeed();
+    metro::Params getParams() const;
 
     ~GenerateDialog();
 
@@ -39,6 +35,7 @@ private:
     int branchesCount;
     int stationsCount;
     int branchThreshold;
+    int minDistance;
     QString seed;
 };
 
