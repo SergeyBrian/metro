@@ -41,15 +41,16 @@ namespace metro {
             {127, 255, 212},
             {255, 229, 180},
             {230, 230, 250},
-            {54,  69,  79},
+            {250, 250, 250},
             {255, 0,   255},
             {194, 178, 128},
             {80,  200, 120},
     };
 
     Color getColor(ColorID id) {
+        id = static_cast<ColorID>(id % COLORS_COUNT);
         return Color{
-                .id = static_cast<ColorID>(id % COLORS_COUNT),
+                .id = id,
                 .rgb = ColorRGB[id],
                 .name = ColorName[id],
         };

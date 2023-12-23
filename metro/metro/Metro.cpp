@@ -58,7 +58,7 @@ namespace metro {
         try {
             return branches.at(station.branch_id);
         } catch (const std::out_of_range &e) {
-            return Branch{};
+            return Branch{.color = getColor(CORAL)};
         }
     }
 }
