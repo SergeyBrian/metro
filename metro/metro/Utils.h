@@ -21,6 +21,10 @@ namespace metro {
     float invSqrt(float number);
 
     double projectionParameter(const Position &point, const Position &lineStart, const Position &lineEnd);
+
+    int squareRadius(const Position &center, const Position &point);
+
+    Position avgPos(const Position &a, const Position &b);
 }
 
 #endif //METRO_UTILS_H

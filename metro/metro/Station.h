@@ -8,6 +8,7 @@
 
 namespace metro {
     struct Station {
+        int id;
         std::string name;
         Position pos;
         int branch_id;

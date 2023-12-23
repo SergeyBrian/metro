@@ -64,5 +64,16 @@ namespace metro {
         conv.f = conv.f * (threehalfs - (x2 * conv.f * conv.f));
         return conv.f;
     }
+
+    int squareRadius(const Position &center, const Position &point) {
+        return (center.x - point.x) * (center.x - point.x) + (center.y - point.y) * (center.y - point.y);
+    }
+
+    Position avgPos(const Position &a, const Position &b) {
+        return {
+                .x = (a.x + b.x) / 2,
+                .y = (a.y + b.y) / 2,
+        };
+    }
 }
 

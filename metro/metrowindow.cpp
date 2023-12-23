@@ -46,9 +46,12 @@ void MetroWindow::slotAlarmTimer() {
 void MetroWindow::drawScheme() {
     scene->clear();
     for (const auto &station: metro->stations) {
+        // TODO: Придумать, что делать с станциями, которые не привязались ни к какой ветке и убрать этот костыль
+        if (station.branch_id == -1) continue;
         double x = getRealX(station.pos.x);
         double y = getRealY(station.pos.y);
-        QGraphicsEllipseItem *stationMarker = scene->addEllipse(x, y, MARKER_WIDTH, MARKER_WIDTH);
+        QGraphicsEllipseItem *stationMarker = scene->addEllipse(x - MARKER_WIDTH / 2, y - MARKER_WIDTH / 2,
+                                                                MARKER_WIDTH, MARKER_WIDTH);
         metro::Branch branch = metro->getBranchByStation(station);
         metro::Color color = branch.color;
         QColor branchQColor = QColor::fromRgb(color.rgb.r, color.rgb.g, color.rgb.b);

@@ -36,6 +36,7 @@ private:
     int stationsCount;
     int branchThreshold;
     int minDistance;
+    int intersectThreshold;
     QString seed;
 };
 

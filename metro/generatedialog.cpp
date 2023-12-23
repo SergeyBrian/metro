@@ -24,6 +24,7 @@ void GenerateDialog::on_buttonBox_accepted() {
     branchesCount = ui->branchesSpinBox->value();
     branchThreshold = ui->branchThresholdSpinBox->value();
     minDistance = ui->minDistanceSpinBox->value();
+    intersectThreshold = ui->intThresholdSpinBox->value();
     seed = ui->seedLineEdit->text();
 }
 
@@ -33,6 +34,7 @@ metro::Params GenerateDialog::getParams() const {
             .stations_count = stationsCount,
             .branch_threshold = branchThreshold,
             .min_distance = minDistance,
+            .intersect_threshold = intersectThreshold,
     };
 }
 

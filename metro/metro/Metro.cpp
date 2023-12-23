@@ -16,8 +16,8 @@ namespace metro {
 
             int distanceOk = true;
             for (const auto &station: stations) {
-                if ((station.pos.x - x) * (station.pos.x - x) + (station.pos.y - y) * (station.pos.y - y) <=
-                    params.min_distance * params.min_distance) {
+                int offset = squareRadius(station.pos, {x, y});
+                if (offset <= params.min_distance * params.min_distance) {
                     distanceOk = false;
                     break;
                 }
@@ -32,6 +32,7 @@ namespace metro {
             sum_x += x;
             sum_y += y;
             stations.push_back({
+                                       .id = i,
                                        .name = "#" + std::to_string(i),
                                        .pos = {
                                                .x = x,
@@ -90,6 +91,31 @@ namespace metro {
                 bindStations(branch_stations[i], branch_stations[i + 1]);
             }
             branch.stations_count = static_cast<int>(branch_stations.size());
+        }
+
+        for (auto &station: stations) {
+            if (station.branch_id == -1) continue;
+            for (auto &other_station: stations) {
+                if (other_station.id == station.id) continue;
+                if (other_station.branch_id == station.branch_id) continue;
+                if (other_station.branch_id == -1) continue;
+                bool alreadyConnected = false;
+                for (auto &connection: other_station.connections) {
+                    if (connection->branch_id == station.branch_id) {
+                        alreadyConnected = true;
+                        break;
+                    }
+                }
+                if (alreadyConnected) continue;
+
+                int offset = squareRadius(station.pos, other_station.pos);
+                if (offset > params.intersect_threshold) continue;
+                std::printf("[INFO] intersect %s and %s\n", station.name.c_str(), other_station.name.c_str());
+                bindStations(&station, &other_station);
+                Position new_pos = avgPos(station.pos, other_station.pos);
+                station.pos = new_pos;
+                other_station.pos = new_pos;
+            }
         }
     }
 
