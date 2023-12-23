@@ -36,6 +36,12 @@ set(PROJECT_SOURCES
         metro/Utils.cpp
         metro/Branch.cpp
         metro/Branch.h
+        stationellipse.cpp
+        stationellipse.h
+        graphicsscene.cpp
+        graphicsscene.h
+        graphicsitemhelper.cpp
+        graphicsitemhelper.h
 )
 
 if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)

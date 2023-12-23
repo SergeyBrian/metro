@@ -45,28 +45,34 @@ void MetroWindow::slotAlarmTimer() {
 
 void MetroWindow::drawScheme() {
     scene->clear();
-    for (const auto &station: metro->stations) {
+    for (int i = 0; i < metro->stations.size(); i++) {
+        metro::Station *station = &metro->stations[i];
         // TODO: Придумать, что делать с станциями, которые не привязались ни к какой ветке и убрать этот костыль
-        if (station.branch_id == -1) continue;
-        double x = getRealX(station.pos.x);
-        double y = getRealY(station.pos.y);
-        QGraphicsEllipseItem *stationMarker = scene->addEllipse(x - MARKER_WIDTH / 2, y - MARKER_WIDTH / 2,
-                                                                MARKER_WIDTH, MARKER_WIDTH);
-        metro::Branch branch = metro->getBranchByStation(station);
+        if (station->branch_id == -1) continue;
+        double x = getRealX(station->pos.x);
+        double y = getRealY(station->pos.y);
+        auto *stationMarker = new StationEllipse();
+        stationMarker->setRect({x - MARKER_WIDTH / 2,
+                                y - MARKER_WIDTH / 2,
+                                MARKER_WIDTH, MARKER_WIDTH});
+        stationMarker->Station(station);
+        connect(stationMarker->helper, &GraphicsItemHelper::itemClicked, this, &MetroWindow::test_callback);
+        scene->addItem(stationMarker);
+        metro::Branch branch = metro->getBranchByStation(*station);
         metro::Color color = branch.color;
         QColor branchQColor = QColor::fromRgb(color.rgb.r, color.rgb.g, color.rgb.b);
         stationMarker->setBrush(branchQColor);
         if (showStationTags) {
-            QGraphicsTextItem *text = scene->addText(QString::fromStdString(station.name));
+            QGraphicsTextItem *text = scene->addText(QString::fromStdString(station->name));
             text->setPos(x, y);
         }
-        for (const auto &connection: station.connections) {
+        for (const auto &connection: station->connections) {
             QGraphicsLineItem *connectionLine = scene->addLine(x, y,
                                                                getRealX(connection->pos.x),
                                                                getRealY(connection->pos.y));
             connectionLine->setPen(QColor::fromRgb(color.rgb.r, color.rgb.g, color.rgb.b));
         }
-        if (branch.begin == &station) {
+        if (branch.begin->id == station->id) {
             if (showBranchTags) {
                 QGraphicsTextItem *branchName = scene->addText(
                         "Branch #" + QString::fromStdString(std::to_string(branch.id)));
@@ -135,5 +141,10 @@ void MetroWindow::on_actionShow_center_marker_triggered(bool checked) {
 void MetroWindow::on_actionShow_branch_traces_triggered(bool checked) {
     showBranchTrace = checked;
     redraw();
+}
+
+void MetroWindow::test_callback(QGraphicsItem *stationMarker) {
+    auto _stationMarker = dynamic_cast<StationEllipse *>(stationMarker);
+    qDebug() << "Station " << QString::fromStdString(_stationMarker->Station()->name) << " pressed";
 }
 

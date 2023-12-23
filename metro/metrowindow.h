@@ -8,6 +8,7 @@
 
 #include "generatedialog.h"
 
+#include "stationellipse.h"
 #include "metro/Metro.h"
 
 namespace Ui {
@@ -37,6 +38,8 @@ private slots:
     void on_actionShow_center_marker_triggered(bool checked);
 
     void on_actionShow_branch_traces_triggered(bool checked);
+
+    void test_callback(QGraphicsItem *stationMarker);
 
 private:
     Ui::MetroWindow *ui;
