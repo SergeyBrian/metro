@@ -4,6 +4,9 @@ namespace metro {
     Metro::Metro() = default;
 
     void Metro::generate(Params params) {
+        branches.clear();
+        stations.clear();
+        old_params = params;
         int sum_x = 0;
         int sum_y = 0;
 

@@ -77,3 +77,25 @@ double MetroWindow::getRealX(int x) {
 double MetroWindow::getRealY(int y) {
     return (gView->height() - MARKER_WIDTH * 2) * (static_cast<double>(y) / 100);
 }
+
+void MetroWindow::on_actionNew_triggered() {
+    auto genDialog = new GenerateDialog(this);
+    if (!genDialog->exec()) return;
+    int stationsCount = genDialog->getStationsCount();
+    int branchesCount = genDialog->getBranchesCount();
+    int branchThreshold = genDialog->getBranchThreshold();
+    QString seed = genDialog->getSeed();
+    metro->generate(metro::Params{
+            .branch_count  = branchesCount,
+            .stations_count = stationsCount,
+            .branch_threshold = branchThreshold,
+    });
+    redraw();
+}
+
+
+void MetroWindow::on_actionRegenerate_triggered() {
+    metro->generate(metro->old_params);
+    redraw();
+}
+

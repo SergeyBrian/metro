@@ -22,6 +22,7 @@ namespace metro {
         Branch getBranchByStation(const Station &station);
 
         Position center{};
+        Params old_params{};
     };
 }
 

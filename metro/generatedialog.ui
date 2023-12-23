@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>253</width>
-    <height>159</height>
+    <height>190</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -36,7 +36,7 @@
      <item row="1" column="1">
       <widget class="QSpinBox" name="stationsSpinBox">
        <property name="minimum">
-        <number>1</number>
+        <number>2</number>
        </property>
        <property name="maximum">
         <number>2000</number>

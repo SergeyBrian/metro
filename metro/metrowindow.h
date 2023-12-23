@@ -6,6 +6,8 @@
 #include <QGraphicsView>
 #include <QGraphicsRectItem>
 
+#include "generatedialog.h"
+
 #include "metro/Metro.h"
 
 namespace Ui {
@@ -23,6 +25,10 @@ public:
 private slots:
 
     void slotAlarmTimer();
+
+    void on_actionNew_triggered();
+
+    void on_actionRegenerate_triggered();
 
 private:
     Ui::MetroWindow *ui;
