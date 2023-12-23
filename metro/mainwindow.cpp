@@ -22,11 +22,13 @@ void MainWindow::on_actionNew_triggered() {
     if (!genDialog->exec()) return;
     int stationsCount = genDialog->getStationsCount();
     int branchesCount = genDialog->getBranchesCount();
+    int branchThreshold = genDialog->getBranchThreshold();
     QString seed = genDialog->getSeed();
     auto metro = new metro::Metro();
     metro->generate(metro::Params{
             .branch_count = branchesCount,
             .stations_count = stationsCount,
+            .branch_threshold = branchThreshold,
     });
     auto metroWindow = new MetroWindow(metro);
     this->close();

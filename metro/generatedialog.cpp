@@ -22,6 +22,7 @@ void GenerateDialog::on_branchesSpinBox_valueChanged(int arg1) {
 void GenerateDialog::on_buttonBox_accepted() {
     stationsCount = ui->stationsSpinBox->value();
     branchesCount = ui->branchesSpinBox->value();
+    branchThreshold = ui->branchThresholdSpinBox->value();
     seed = ui->seedLineEdit->text();
 }
 
@@ -31,6 +32,10 @@ int GenerateDialog::getBranchesCount() const {
 
 int GenerateDialog::getStationsCount() const {
     return stationsCount;
+}
+
+int GenerateDialog::getBranchThreshold() const {
+    return branchThreshold;
 }
 
 QString GenerateDialog::getSeed() {

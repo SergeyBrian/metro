@@ -52,6 +52,26 @@ namespace metro {
 
             branches[i] = branch;
         }
+
+        for (const auto &[id, branch]: branches) {
+            std::vector<Station *> branch_stations;
+            for (auto &station: stations) {
+                if (distanceToLineSegment(station.pos, branch.begin->pos, branch.end->pos) >
+                    params.branch_threshold || station.branch_id != -1)
+                    continue;
+                branch_stations.push_back(&station);
+                station.branch_id = branch.id;
+            }
+            branch_stations.push_back(branch.end);
+            branch_stations.push_back(branch.begin);
+            std::sort(branch_stations.begin(), branch_stations.end(),
+                      [](const Station *a, const Station *b) {
+                          return (a->pos.x < b->pos.x) || (a->pos.x == b->pos.x && a->pos.y < b->pos.y);
+                      });
+            for (int i = 0; i < branch_stations.size() - 1; i++) {
+                bindStations(branch_stations[i], branch_stations[i + 1]);
+            }
+        }
     }
 
     Branch Metro::getBranchByStation(const Station &station) {

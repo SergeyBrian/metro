@@ -40,7 +40,6 @@ void MetroWindow::slotAlarmTimer() {
 
 void MetroWindow::drawScheme() {
     scene->clear();
-    int idx = 0;
     for (const auto &station: metro->stations) {
         double x = getRealX(station.pos.x);
         double y = getRealY(station.pos.y);
@@ -49,6 +48,12 @@ void MetroWindow::drawScheme() {
         stationMarker->setBrush(QColor::fromRgb(color.rgb.r, color.rgb.g, color.rgb.b));
         QGraphicsTextItem *text = scene->addText(QString::fromStdString(std::to_string(station.branch_id)));
         text->setPos(x, y);
+        for (const auto &connection: station.connections) {
+            QGraphicsLineItem *connectionLine = scene->addLine(x, y,
+                                                               getRealX(connection->pos.x),
+                                                               getRealY(connection->pos.y));
+            connectionLine->setPen(QColor::fromRgb(color.rgb.r, color.rgb.g, color.rgb.b));
+        }
     }
 #ifndef NDEBUG
     QGraphicsRectItem *debug_centerMarker = scene->addRect(getRealX(metro->center.x),
@@ -58,7 +63,9 @@ void MetroWindow::drawScheme() {
     for (const auto &[id, branch]: metro->branches) {
         QGraphicsLineItem *line = scene->addLine(getRealX(branch.begin->pos.x), getRealY(branch.begin->pos.y),
                                                  getRealX(branch.end->pos.x), getRealY(branch.end->pos.y));
-        line->setPen(QColor::fromRgb(branch.color.rgb.r, branch.color.rgb.g, branch.color.rgb.b));
+        auto pen = QPen(QColor::fromRgb(branch.color.rgb.r, branch.color.rgb.g, branch.color.rgb.b));
+        pen.setStyle(Qt::DashLine);
+        line->setPen(pen);
     }
 #endif
 }

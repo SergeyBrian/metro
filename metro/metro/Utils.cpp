@@ -34,13 +34,35 @@ namespace metro {
     }
 
     bool isInOppositeQuadrant(const Position &a, const Position &b, const Position &center) {
-        Position a_prime = {a.x - center.x, a.y - center.y};
-        Position b_prime = {b.x - center.x, b.y - center.y};
+        Position a_prime = a - center;
+        Position b_prime = b - center;
 
         // Check if a_prime and b_prime are in opposite quadrants
         // They are in opposite quadrants if one of the following is true:
         // - a_prime.x and b_prime.x have different signs AND a_prime.y and b_prime.y have different signs
         return (a_prime.x * b_prime.x <= 0) && (a_prime.y * b_prime.y <= 0);
+    }
+
+    int distanceToLineSegment(const Position &p, const Position &a, const Position &b) {
+        int A = (b.y - a.y) * p.x - (b.x - a.x) * p.y + b.x * a.y - b.y * a.x;
+        int B = (b.y - a.y) * (b.y - a.y) + (b.x - a.x) * (b.x - a.x);
+        return static_cast<int>(static_cast<float>(abs(A)) * invSqrt(static_cast<float>(B)));
+    }
+
+    float invSqrt(float number) {
+        union {
+            float f;
+            uint32_t i;
+        } conv;
+
+        float x2;
+        const float threehalfs = 1.5F;
+
+        x2 = number * 0.5F;
+        conv.f = number;
+        conv.i = 0x5f3759df - (conv.i >> 1);
+        conv.f = conv.f * (threehalfs - (x2 * conv.f * conv.f));
+        return conv.f;
     }
 }
 

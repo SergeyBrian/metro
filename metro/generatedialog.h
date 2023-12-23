@@ -19,6 +19,8 @@ public:
 
     int getStationsCount() const;
 
+    int getBranchThreshold() const;
+
     QString getSeed();
 
     ~GenerateDialog();
@@ -36,6 +38,7 @@ private:
 
     int branchesCount;
     int stationsCount;
+    int branchThreshold;
     QString seed;
 };
 

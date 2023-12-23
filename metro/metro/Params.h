@@ -5,6 +5,7 @@ namespace metro {
     struct Params {
         int branch_count;
         int stations_count;
+        int branch_threshold;
     };
 }
 
