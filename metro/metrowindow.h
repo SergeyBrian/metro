@@ -30,6 +30,14 @@ private slots:
 
     void on_actionRegenerate_triggered();
 
+    void on_actionShow_station_tags_triggered(bool checked);
+
+    void on_actionShow_branch_tags_triggered(bool checked);
+
+    void on_actionShow_center_marker_triggered(bool checked);
+
+    void on_actionShow_branch_traces_triggered(bool checked);
+
 private:
     Ui::MetroWindow *ui;
     QGraphicsView *gView;
@@ -45,6 +53,11 @@ private:
     double getRealX(int x);
 
     double getRealY(int y);
+
+    bool showBranchTags;
+    bool showStationTags;
+    bool showCenterMarker;
+    bool showBranchTrace;
 };
 
 #endif // METROWINDOW_H

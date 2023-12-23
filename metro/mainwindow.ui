@@ -47,17 +47,8 @@
     <addaction name="actionNew"/>
     <addaction name="actionOpen"/>
     <addaction name="actionOpen_recent"/>
-    <addaction name="actionSave"/>
-    <addaction name="actionSave_as"/>
-   </widget>
-   <widget class="QMenu" name="menuNavigator">
-    <property name="title">
-     <string>Navigator</string>
-    </property>
-    <addaction name="actionBuild"/>
    </widget>
    <addaction name="menuFile"/>
-   <addaction name="menuNavigator"/>
   </widget>
   <action name="actionHello">
    <property name="text">

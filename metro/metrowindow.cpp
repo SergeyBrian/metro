@@ -5,6 +5,11 @@
 
 MetroWindow::MetroWindow(metro::Metro *metro, QWidget *parent)
         : QMainWindow(parent), ui(new Ui::MetroWindow) {
+    showBranchTags = true;
+    showStationTags = false;
+    showCenterMarker = false;
+    showBranchTrace = false;
+
     ui->setupUi(this);
     this->metro = metro;
     gView = ui->graphicsView;
@@ -44,30 +49,44 @@ void MetroWindow::drawScheme() {
         double x = getRealX(station.pos.x);
         double y = getRealY(station.pos.y);
         QGraphicsEllipseItem *stationMarker = scene->addEllipse(x, y, MARKER_WIDTH, MARKER_WIDTH);
-        metro::Color color = metro->getBranchByStation(station).color;
-        stationMarker->setBrush(QColor::fromRgb(color.rgb.r, color.rgb.g, color.rgb.b));
-        QGraphicsTextItem *text = scene->addText(QString::fromStdString(std::to_string(station.branch_id)));
-        text->setPos(x, y);
+        metro::Branch branch = metro->getBranchByStation(station);
+        metro::Color color = branch.color;
+        QColor branchQColor = QColor::fromRgb(color.rgb.r, color.rgb.g, color.rgb.b);
+        stationMarker->setBrush(branchQColor);
+        if (showStationTags) {
+            QGraphicsTextItem *text = scene->addText(QString::fromStdString(station.name));
+            text->setPos(x, y);
+        }
         for (const auto &connection: station.connections) {
             QGraphicsLineItem *connectionLine = scene->addLine(x, y,
                                                                getRealX(connection->pos.x),
                                                                getRealY(connection->pos.y));
             connectionLine->setPen(QColor::fromRgb(color.rgb.r, color.rgb.g, color.rgb.b));
         }
+        if (branch.begin == &station) {
+            if (showBranchTags) {
+                QGraphicsTextItem *branchName = scene->addText(
+                        "Branch #" + QString::fromStdString(std::to_string(branch.id)));
+                branchName->setPos(x, y - 20);
+                branchName->setDefaultTextColor(branchQColor);
+            }
+        }
     }
-#ifndef NDEBUG
-    QGraphicsRectItem *debug_centerMarker = scene->addRect(getRealX(metro->center.x),
-                                                           getRealY(metro->center.y),
-                                                           MARKER_WIDTH, MARKER_WIDTH);
-    debug_centerMarker->setBrush(Qt::red);
-    for (const auto &[id, branch]: metro->branches) {
-        QGraphicsLineItem *line = scene->addLine(getRealX(branch.begin->pos.x), getRealY(branch.begin->pos.y),
-                                                 getRealX(branch.end->pos.x), getRealY(branch.end->pos.y));
-        auto pen = QPen(QColor::fromRgb(branch.color.rgb.r, branch.color.rgb.g, branch.color.rgb.b));
-        pen.setStyle(Qt::DashLine);
-        line->setPen(pen);
+    if (showCenterMarker) {
+        QGraphicsRectItem *debug_centerMarker = scene->addRect(getRealX(metro->center.x),
+                                                               getRealY(metro->center.y),
+                                                               MARKER_WIDTH, MARKER_WIDTH);
+        debug_centerMarker->setBrush(Qt::red);
     }
-#endif
+    if (showBranchTrace) {
+        for (const auto &[id, branch]: metro->branches) {
+            QGraphicsLineItem *line = scene->addLine(getRealX(branch.begin->pos.x), getRealY(branch.begin->pos.y),
+                                                     getRealX(branch.end->pos.x), getRealY(branch.end->pos.y));
+            auto pen = QPen(QColor::fromRgb(branch.color.rgb.r, branch.color.rgb.g, branch.color.rgb.b));
+            pen.setStyle(Qt::DashLine);
+            line->setPen(pen);
+        }
+    }
 }
 
 double MetroWindow::getRealX(int x) {
@@ -96,6 +115,30 @@ void MetroWindow::on_actionNew_triggered() {
 
 void MetroWindow::on_actionRegenerate_triggered() {
     metro->generate(metro->old_params);
+    redraw();
+}
+
+
+void MetroWindow::on_actionShow_station_tags_triggered(bool checked) {
+    showStationTags = checked;
+    redraw();
+}
+
+
+void MetroWindow::on_actionShow_branch_tags_triggered(bool checked) {
+    showBranchTags = checked;
+    redraw();
+}
+
+
+void MetroWindow::on_actionShow_center_marker_triggered(bool checked) {
+    showCenterMarker = checked;
+    redraw();
+}
+
+
+void MetroWindow::on_actionShow_branch_traces_triggered(bool checked) {
+    showBranchTrace = checked;
     redraw();
 }
 
