@@ -51,13 +51,12 @@ void MetroWindow::drawScheme() {
         if (station->branch_id == -1) continue;
         double x = getRealX(station->pos.x);
         double y = getRealY(station->pos.y);
-        auto *stationMarker = new StationEllipse();
-        stationMarker->setRect({x - MARKER_WIDTH / 2,
-                                y - MARKER_WIDTH / 2,
-                                MARKER_WIDTH, MARKER_WIDTH});
+        auto *stationMarker = new StationEllipse({x - MARKER_WIDTH / 2,
+                                                  y - MARKER_WIDTH / 2,
+                                                  MARKER_WIDTH, MARKER_WIDTH});
         stationMarker->Station(station);
-        connect(stationMarker->helper, &GraphicsItemHelper::itemClicked, this, &MetroWindow::test_callback);
-        scene->addItem(stationMarker);
+        connect(stationMarker->Helper(), &GraphicsItemHelper::itemClicked, this, &MetroWindow::stationPressCallback);
+        stationMarker->addToScene(scene);
         metro::Branch branch = metro->getBranchByStation(*station);
         metro::Color color = branch.color;
         QColor branchQColor = QColor::fromRgb(color.rgb.r, color.rgb.g, color.rgb.b);
@@ -143,8 +142,9 @@ void MetroWindow::on_actionShow_branch_traces_triggered(bool checked) {
     redraw();
 }
 
-void MetroWindow::test_callback(QGraphicsItem *stationMarker) {
+void MetroWindow::stationPressCallback(QGraphicsItem *stationMarker) {
     auto _stationMarker = dynamic_cast<StationEllipse *>(stationMarker);
     qDebug() << "Station " << QString::fromStdString(_stationMarker->Station()->name) << " pressed";
+    _stationMarker->toggleSelect();
 }
 

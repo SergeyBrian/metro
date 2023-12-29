@@ -39,7 +39,7 @@ private slots:
 
     void on_actionShow_branch_traces_triggered(bool checked);
 
-    void test_callback(QGraphicsItem *stationMarker);
+    void stationPressCallback(QGraphicsItem *stationMarker);
 
 private:
     Ui::MetroWindow *ui;
