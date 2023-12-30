@@ -42,6 +42,14 @@ set(PROJECT_SOURCES
         graphicsscene.h
         graphicsitemhelper.cpp
         graphicsitemhelper.h
+        metro/Route.cpp
+        metro/Route.h
+        metro/Filesys.cpp
+        metro/Filesys.h
+        fileselector.cpp
+        fileselector.h
+        metro/Exceptions.cpp
+        metro/Exceptions.h
 )
 
 if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)

@@ -5,11 +5,14 @@
 #include <QTimer>
 #include <QGraphicsView>
 #include <QGraphicsRectItem>
+#include <QFileDialog>
 
 #include "generatedialog.h"
 
 #include "stationellipse.h"
 #include "metro/Metro.h"
+#include "metro/Filesys.h"
+#include "fileselector.h"
 
 namespace Ui {
     class MetroWindow;
@@ -20,6 +23,8 @@ Q_OBJECT
 
 public:
     MetroWindow(metro::Metro *metro, QWidget *parent = nullptr);
+
+    MetroWindow(const QString &filename, QWidget *parent = nullptr);
 
     ~MetroWindow();
 
@@ -41,6 +46,10 @@ private slots:
 
     void stationPressCallback(QGraphicsItem *stationMarker);
 
+    void on_actionSave_triggered();
+
+    void on_actionOpen_triggered();
+
 private:
     Ui::MetroWindow *ui;
     QGraphicsView *gView;
@@ -61,6 +70,8 @@ private:
     bool showStationTags;
     bool showCenterMarker;
     bool showBranchTrace;
+
+    QString filename;
 };
 
 #endif // METROWINDOW_H

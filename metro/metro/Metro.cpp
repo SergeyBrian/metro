@@ -6,6 +6,7 @@ namespace metro {
     void Metro::generate(Params params) {
         branches.clear();
         stations.clear();
+        route.stations.clear();
         old_params = params;
         int sum_x = 0;
         int sum_y = 0;
@@ -109,7 +110,7 @@ namespace metro {
                 if (alreadyConnected) continue;
 
                 int offset = squareRadius(station.pos, other_station.pos);
-                if (offset > params.intersect_threshold) continue;
+                if (offset > params.intersect_threshold * params.intersect_threshold) continue;
                 std::printf("[INFO] intersect %s and %s\n", station.name.c_str(), other_station.name.c_str());
                 bindStations(&station, &other_station);
                 Position new_pos = avgPos(station.pos, other_station.pos);
@@ -125,5 +126,17 @@ namespace metro {
         } catch (const std::out_of_range &e) {
             return Branch{.color = getColor(CORAL)};
         }
+    }
+
+    void Metro::addStationToRoute(Station *station) {
+        route.stations.push_back(station);
+    }
+
+    void Metro::removeStationFromRoute(Station *station) {
+        route.stations.erase(
+                std::remove_if(route.stations.begin(), route.stations.end(),
+                               [&](Station *s) { return s->id == station->id; }),
+                route.stations.end()
+        );
     }
 }

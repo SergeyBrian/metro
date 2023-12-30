@@ -11,7 +11,6 @@
 #define MARKER_SELECT_INDICATOR_WIDTH 5
 
 class StationEllipse : public QGraphicsEllipseItem {
-    metro::Station *station{};
 public:
     explicit StationEllipse(QRectF rect);
 
@@ -19,7 +18,7 @@ public:
 
     metro::Station *Station();
 
-    void toggleSelect();
+    bool toggleSelect();
 
     GraphicsItemHelper *Helper();
 
@@ -36,6 +35,8 @@ private:
     QGraphicsEllipseItem *selectCircle;
 
     bool selected;
+
+    metro::Station *station{};
 };
 
 #endif //METRO_STATIONELLIPSE_H

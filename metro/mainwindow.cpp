@@ -28,3 +28,20 @@ void MainWindow::on_actionNew_triggered() {
     metroWindow->activateWindow();
     metroWindow->showMaximized();
 }
+
+void MainWindow::on_actionOpen_triggered() {
+    QString filename;
+    if (!selectFileOpen(&filename)) return;
+    try {
+        auto metroWindow = new MetroWindow(filename);
+
+        this->close();
+        metroWindow->activateWindow();
+        metroWindow->showMaximized();
+    } catch (const metro::InvalidVersionException &e) {
+        QMessageBox::critical(this, "Error", QString::fromStdString(e.what()));
+    } catch (const std::runtime_error &e) {
+        QMessageBox::critical(this, "Error", "Error reading file");
+    }
+}
+

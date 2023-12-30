@@ -145,6 +145,29 @@ void MetroWindow::on_actionShow_branch_traces_triggered(bool checked) {
 void MetroWindow::stationPressCallback(QGraphicsItem *stationMarker) {
     auto _stationMarker = dynamic_cast<StationEllipse *>(stationMarker);
     qDebug() << "Station " << QString::fromStdString(_stationMarker->Station()->name) << " pressed";
-    _stationMarker->toggleSelect();
+    bool selected = _stationMarker->toggleSelect();
+    if (selected) metro->addStationToRoute(_stationMarker->Station());
+    else metro->removeStationFromRoute(_stationMarker->Station());
+    for (const auto &station: metro->route.stations) {
+        printf("%s -> ", station->name.c_str());
+    }
+    printf("\n");
+}
+
+
+void MetroWindow::on_actionSave_triggered() {
+    if (filename.isEmpty() && !selectFileSave(&filename)) return;
+    metro::saveToFile(filename.toStdString(), metro);
+}
+
+
+void MetroWindow::on_actionOpen_triggered() {
+    if (!selectFileOpen(&filename)) return;
+    metro::loadFromFile(filename.toStdString(), metro);
+    redraw();
+}
+
+MetroWindow::MetroWindow(const QString &filename, QWidget *parent) : MetroWindow(new metro::Metro(), parent) {
+    metro::loadFromFile(filename.toStdString(), metro);
 }
 

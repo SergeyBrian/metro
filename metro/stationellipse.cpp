@@ -26,9 +26,10 @@ StationEllipse::StationEllipse(QRectF rect) {
     selectCircle->setVisible(false);
 }
 
-void StationEllipse::toggleSelect() {
+bool StationEllipse::toggleSelect() {
     selected = !selected;
     selectCircle->setVisible(selected);
+    return selected;
 }
 
 GraphicsItemHelper *StationEllipse::Helper() {

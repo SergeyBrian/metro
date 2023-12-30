@@ -6,9 +6,11 @@
 #include <QMainWindow>
 #include <QDebug>
 #include <QStatusBar>
+#include <QMessageBox>
 
 #include "generatedialog.h"
 #include "metrowindow.h"
+#include "fileselector.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -30,6 +32,8 @@ private:
 private slots:
 
     void on_actionNew_triggered();
+
+    void on_actionOpen_triggered();
 };
 
 #endif // MAINWINDOW_H
