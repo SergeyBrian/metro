@@ -9,6 +9,7 @@ MetroWindow::MetroWindow(metro::Metro *metro, QWidget *parent)
     showStationTags = false;
     showCenterMarker = false;
     showBranchTrace = false;
+    this->filename_base = "* New metro";
 
     ui->setupUi(this);
     this->metro = metro;
@@ -25,6 +26,7 @@ MetroWindow::~MetroWindow() {
 }
 
 void MetroWindow::redraw() {
+    this->setWindowTitle("Metro viewer: " + filename_base);
     auto timer = new QTimer(this);
     timer->setSingleShot(true);
     connect(timer, SIGNAL(timeout()), this, SLOT(slotAlarmTimer()));
@@ -156,18 +158,26 @@ void MetroWindow::stationPressCallback(QGraphicsItem *stationMarker) {
 
 
 void MetroWindow::on_actionSave_triggered() {
-    if (filename.isEmpty() && !selectFileSave(&filename)) return;
+    if (filename.isEmpty() && !selectFileSave(&filename, &filename_base)) return;
     metro::saveToFile(filename.toStdString(), metro);
 }
 
 
 void MetroWindow::on_actionOpen_triggered() {
-    if (!selectFileOpen(&filename)) return;
-    metro::loadFromFile(filename.toStdString(), metro);
-    redraw();
+    if (!selectFileOpen(&filename, &filename_base)) return;
+    try {
+        metro::loadFromFile(filename.toStdString(), metro);
+        redraw();
+    } catch (const metro::FilesysException &e) {
+        QMessageBox::critical(this, "Error", QString::fromStdString(e.what()));
+    } catch (const std::runtime_error &e) {
+        QMessageBox::critical(this, "Error", "Error reading file");
+    }
 }
 
-MetroWindow::MetroWindow(const QString &filename, QWidget *parent) : MetroWindow(new metro::Metro(), parent) {
+MetroWindow::MetroWindow(const QString &filename, const QString &filename_base, QWidget *parent) : MetroWindow(
+        new metro::Metro(), parent) {
+    this->filename_base = filename_base;
     metro::loadFromFile(filename.toStdString(), metro);
 }
 

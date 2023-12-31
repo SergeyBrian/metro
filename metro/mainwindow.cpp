@@ -31,14 +31,15 @@ void MainWindow::on_actionNew_triggered() {
 
 void MainWindow::on_actionOpen_triggered() {
     QString filename;
-    if (!selectFileOpen(&filename)) return;
+    QString filename_base;
+    if (!selectFileOpen(&filename, &filename_base)) return;
     try {
-        auto metroWindow = new MetroWindow(filename);
+        auto metroWindow = new MetroWindow(filename, filename_base);
 
         this->close();
         metroWindow->activateWindow();
         metroWindow->showMaximized();
-    } catch (const metro::InvalidVersionException &e) {
+    } catch (const metro::FilesysException &e) {
         QMessageBox::critical(this, "Error", QString::fromStdString(e.what()));
     } catch (const std::runtime_error &e) {
         QMessageBox::critical(this, "Error", "Error reading file");

@@ -1,6 +1,6 @@
 #include "fileselector.h"
 
-bool selectFileOpen(QString *filename) {
+bool selectFileOpen(QString *filename, QString *filename_base) {
     auto fileDialog = QFileDialog();
     fileDialog.setAcceptMode(QFileDialog::AcceptOpen);
     fileDialog.setDefaultSuffix("mettro");
@@ -12,10 +12,12 @@ bool selectFileOpen(QString *filename) {
     *filename = fileDialog.selectedFiles()[0];
     QFileInfo fileInfo(*filename);
     settings.setValue("lastDir", fileInfo.absolutePath());
+    if (!filename_base) return true;
+    *filename_base = fileInfo.baseName();
     return true;
 }
 
-bool selectFileSave(QString *filename) {
+bool selectFileSave(QString *filename, QString *filename_base) {
     auto fileDialog = QFileDialog();
     fileDialog.setAcceptMode(QFileDialog::AcceptSave);
     fileDialog.setDefaultSuffix("mettro");
@@ -27,5 +29,7 @@ bool selectFileSave(QString *filename) {
     *filename = fileDialog.selectedFiles()[0];
     QFileInfo fileInfo(*filename);
     settings.setValue("lastDir", fileInfo.absolutePath());
+    if (!filename_base) return true;
+    *filename_base = fileInfo.baseName();
     return true;
 }

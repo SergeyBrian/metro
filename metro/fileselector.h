@@ -4,8 +4,8 @@
 #include <QFileDialog>
 #include <QSettings>
 
-bool selectFileOpen(QString *filename);
+bool selectFileOpen(QString *filename, QString *filename_base = nullptr);
 
-bool selectFileSave(QString *filename);
+bool selectFileSave(QString *filename, QString *filename_base = nullptr);
 
 #endif //METRO_FILESELECTOR_H

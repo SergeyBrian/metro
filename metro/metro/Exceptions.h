@@ -4,9 +4,29 @@
 #include <stdexcept>
 
 namespace metro {
-    class InvalidVersionException : public std::runtime_error {
+    class FilesysException : public std::runtime_error {
+    public:
+        FilesysException(const char *msg);
+    };
+
+    class InvalidVersionException : public FilesysException {
     public:
         InvalidVersionException();
+    };
+
+    class NotMetroFileException : public FilesysException {
+    public:
+        NotMetroFileException();
+    };
+
+    class DamagedFileException : public FilesysException {
+    public:
+        DamagedFileException();
+    };
+
+    class FileNotFoundException : public FilesysException {
+    public:
+        FileNotFoundException();
     };
 }
 

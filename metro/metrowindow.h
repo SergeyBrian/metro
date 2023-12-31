@@ -6,6 +6,7 @@
 #include <QGraphicsView>
 #include <QGraphicsRectItem>
 #include <QFileDialog>
+#include <QMessageBox>
 
 #include "generatedialog.h"
 
@@ -24,7 +25,7 @@ Q_OBJECT
 public:
     MetroWindow(metro::Metro *metro, QWidget *parent = nullptr);
 
-    MetroWindow(const QString &filename, QWidget *parent = nullptr);
+    MetroWindow(const QString &filename, const QString &filename_base, QWidget *parent = nullptr);
 
     ~MetroWindow();
 
@@ -72,6 +73,7 @@ private:
     bool showBranchTrace;
 
     QString filename;
+    QString filename_base;
 };
 
 #endif // METROWINDOW_H

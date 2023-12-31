@@ -1,13 +1,19 @@
 #include "Filesys.h"
 
+#define METRO_FILETYPE_MARKER_STR "METRO_SCHEME"
+#define METRO_FILETYPE_VERSION 2
+
 void metro::saveToFile(const std::string &filename, metro::Metro *metro) {
     auto file = std::ofstream(filename, std::ios::binary | std::ios::out);
-    char version = METRO_LIB_VERSION;
-    file.write(&version, sizeof(version));
+    int version = METRO_LIB_VERSION;
+    int filetype_version = METRO_FILETYPE_VERSION;
+    const char filetype_marker[] = METRO_FILETYPE_MARKER_STR;
+    file.write(filetype_marker, sizeof(filetype_marker));
+    file.write(reinterpret_cast<const char *>(&version), sizeof(version));
+    file.write(reinterpret_cast<const char *>(&filetype_version), sizeof(filetype_version));
     unsigned long station_count = metro->stations.size();
     file.write(reinterpret_cast<const char *>(&station_count), sizeof(station_count));
     for (const auto &station: metro->stations) {
-        if (station.branch_id == -1) continue;
         auto fstation = FStation(&station);
         file.write(reinterpret_cast<const char *>(&fstation.id), sizeof(fstation.id));
         size_t name_size = fstation.name.length();
@@ -34,11 +40,20 @@ void metro::loadFromFile(const std::string &filename, metro::Metro *metro) {
     std::unordered_map<int, FStation> fstations;
     std::unordered_map<int, FBranch> fbranches;
     auto file = std::ifstream(filename, std::ios::binary | std::ios::in);
-    char version;
-    file.read(&version, sizeof(version));
+    if (file.fail()) throw FileNotFoundException();
+    int version;
+    int filetype_version;
+    char filetype_marker[strlen(METRO_FILETYPE_MARKER_STR) + 1];
+    file.read(filetype_marker, strlen(METRO_FILETYPE_MARKER_STR) + 1);
+    if (std::strcmp(filetype_marker, METRO_FILETYPE_MARKER_STR)) throw NotMetroFileException();
+    file.read(reinterpret_cast<char *>(&version), sizeof(version));
+    file.read(reinterpret_cast<char *>(&filetype_version), sizeof(filetype_version));
     if (version != 2) throw InvalidVersionException();
+    if (filetype_version != 2) throw InvalidVersionException();
     unsigned long station_count;
     file.read(reinterpret_cast<char *>(&station_count), sizeof(station_count));
+    if (station_count < METRO_MIN_STATIONS_COUNT || station_count > METRO_MAX_STATIONS_COUNT)
+        throw DamagedFileException();
     for (int i = 0; i < station_count; i++) {
         FStation fstation = {};
         file.read(reinterpret_cast<char *>(&fstation.id), sizeof(fstation.id));
@@ -57,6 +72,8 @@ void metro::loadFromFile(const std::string &filename, metro::Metro *metro) {
     }
     unsigned long branch_count;
     file.read(reinterpret_cast<char *>(&branch_count), sizeof(branch_count));
+    if (branch_count < METRO_MIN_BRANCHES_COUNT || branch_count > METRO_MAX_BRANCHES_COUNT(station_count))
+        throw DamagedFileException();
     for (int i = 0; i < branch_count; i++) {
         FBranch fbranch = {};
         file.read(reinterpret_cast<char *>(&fbranch), sizeof(fbranch));

@@ -14,6 +14,11 @@
 #include "Route.h"
 #include "Exceptions.h"
 
+#define METRO_MAX_STATIONS_COUNT 2000
+#define METRO_MIN_STATIONS_COUNT 2
+#define METRO_MIN_BRANCHES_COUNT 1
+#define METRO_MAX_BRANCHES_COUNT(stations_count) (stations_count / 2)
+
 namespace metro {
     class Metro {
     public:

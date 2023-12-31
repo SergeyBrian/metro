@@ -1,7 +1,15 @@
 #include "Metro.h"
 
 namespace metro {
-    Metro::Metro() = default;
+    Metro::Metro() {
+        old_params = {
+                .branch_count = 3,
+                .stations_count = 10,
+                .branch_threshold = 3,
+                .min_distance = 2,
+                .intersect_threshold = 4,
+        };
+    }
 
     void Metro::generate(Params params) {
         branches.clear();
