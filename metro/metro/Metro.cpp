@@ -14,7 +14,7 @@ namespace metro {
     void Metro::generate(Params params) {
         branches.clear();
         stations.clear();
-        route.stations.clear();
+        route.target_stations.clear();
         old_params = params;
         int sum_x = 0;
         int sum_y = 0;
@@ -137,14 +137,16 @@ namespace metro {
     }
 
     void Metro::addStationToRoute(Station *station) {
-        route.stations.push_back(station);
+        route.target_stations.push_back(station);
+        calculateRoute(&route, DIJKSTRA);
     }
 
     void Metro::removeStationFromRoute(Station *station) {
-        route.stations.erase(
-                std::remove_if(route.stations.begin(), route.stations.end(),
+        route.target_stations.erase(
+                std::remove_if(route.target_stations.begin(), route.target_stations.end(),
                                [&](Station *s) { return s->id == station->id; }),
-                route.stations.end()
+                route.target_stations.end()
         );
+        calculateRoute(&route, DIJKSTRA);
     }
 }
