@@ -18,6 +18,8 @@ namespace metro {
         old_params = params;
         int sum_x = 0;
         int sum_y = 0;
+        branches_connections = std::vector<std::vector<bool>>(params.branch_count,
+                                                              std::vector<bool>(params.branch_count));
 
         for (int i = 0; i < params.stations_count; i++) {
             int x = biasedRandomInt(0, 100);
@@ -108,6 +110,7 @@ namespace metro {
                 if (other_station.id == station.id) continue;
                 if (other_station.branch_id == station.branch_id) continue;
                 if (other_station.branch_id == -1) continue;
+                if (branches_connections.at(station.branch_id).at(other_station.branch_id)) continue;
                 bool alreadyConnected = false;
                 for (auto &connection: other_station.connections) {
                     if (connection->branch_id == station.branch_id) {
@@ -121,9 +124,9 @@ namespace metro {
                 if (offset > params.intersect_threshold * params.intersect_threshold) continue;
                 std::printf("[INFO] intersect %s and %s\n", station.name.c_str(), other_station.name.c_str());
                 bindStations(&station, &other_station);
-                Position new_pos = avgPos(station.pos, other_station.pos);
-                station.pos = new_pos;
-                other_station.pos = new_pos;
+                branches_connections[station.branch_id][other_station.branch_id] = true;
+                branches_connections[other_station.branch_id][station.branch_id] = true;
+                station.pos = other_station.pos;
             }
         }
     }

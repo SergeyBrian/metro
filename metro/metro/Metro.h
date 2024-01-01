@@ -26,6 +26,7 @@ namespace metro {
 
         std::vector<Station> stations;
         std::unordered_map<int, Branch> branches;
+        std::vector<std::vector<bool>> branches_connections;
         Route route{};
 
         void generate(Params params);
