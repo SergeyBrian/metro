@@ -25,6 +25,8 @@ public:
 
     ~MainWindow();
 
+    void openFile(const QString &filename, const QString &filename_base);
+
 private:
     Ui::MainWindow *ui;
 
