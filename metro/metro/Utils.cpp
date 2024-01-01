@@ -50,6 +50,7 @@ namespace metro {
     }
 
     float invSqrt(float number) {
+#ifdef METRO_USE_C_INV_SQRT_ALG
         union {
             float f;
             uint32_t i;
@@ -63,6 +64,9 @@ namespace metro {
         conv.i = 0x5f3759df - (conv.i >> 1);
         conv.f = conv.f * (threehalfs - (x2 * conv.f * conv.f));
         return conv.f;
+#else
+        return 1 / std::sqrt(number);
+#endif
     }
 
     int squareRadius(const Position &center, const Position &point) {

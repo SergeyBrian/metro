@@ -87,6 +87,7 @@ set_target_properties(Metro PROPERTIES
         MACOSX_BUNDLE_ICON_FILE metro.icns
         MACOSX_BUNDLE TRUE
         WIN32_EXECUTABLE TRUE
+        MACOSX_BUNDLE_INFO_PLIST ${CMAKE_SOURCE_DIR}/platform/macos/Info.plist
 )
 set(app_icon_macos "${CMAKE_CURRENT_SOURCE_DIR}/img/metro.icns")
 set_source_files_properties(${app_icon_macos} PROPERTIES

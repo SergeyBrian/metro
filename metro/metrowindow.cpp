@@ -150,7 +150,7 @@ void MetroWindow::stationPressCallback(QGraphicsItem *stationMarker) {
     bool selected = _stationMarker->toggleSelect();
     if (selected) metro->addStationToRoute(_stationMarker->Station());
     else metro->removeStationFromRoute(_stationMarker->Station());
-    for (const auto &station: metro->route.stations) {
+    for (const auto &station: metro->route.target_stations) {
         printf("%s -> ", station->name.c_str());
     }
     printf("\n");
@@ -160,6 +160,7 @@ void MetroWindow::stationPressCallback(QGraphicsItem *stationMarker) {
 void MetroWindow::on_actionSave_triggered() {
     if (filename.isEmpty() && !selectFileSave(&filename, &filename_base)) return;
     metro::saveToFile(filename.toStdString(), metro);
+    redraw();
 }
 
 
@@ -179,5 +180,12 @@ MetroWindow::MetroWindow(const QString &filename, const QString &filename_base, 
         new metro::Metro(), parent) {
     this->filename_base = filename_base;
     metro::loadFromFile(filename.toStdString(), metro);
+}
+
+
+void MetroWindow::on_actionSave_as_triggered() {
+    if (!selectFileSave(&filename, &filename_base)) return;
+    metro::saveToFile(filename.toStdString(), metro);
+    redraw();
 }
 

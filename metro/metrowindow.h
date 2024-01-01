@@ -51,6 +51,8 @@ private slots:
 
     void on_actionOpen_triggered();
 
+    void on_actionSave_as_triggered();
+
 private:
     Ui::MetroWindow *ui;
     QGraphicsView *gView;
