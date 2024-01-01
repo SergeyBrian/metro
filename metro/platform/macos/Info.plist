@@ -38,5 +38,24 @@
 
 	<key>NSSupportsAutomaticGraphicsSwitching</key>
 	<true/>
+
+	<key>UTExportedTypeDeclarations</key>
+    <array>
+        <dict>
+            <key>UTTypeIdentifier</key>
+            <string>com.bimbimbambam.metro-document</string>
+            <key>UTTypeDescription</key>
+            <string>Metro scheme</string>
+            <key>UTTypeTagSpecification</key>
+            <dict>
+                <key>public.filename-extension</key>
+                <array>
+                    <string>mettro</string>
+                </array>
+            </dict>
+        </dict>
+    </array>
+    <key>CFBundleTypeIconFile</key>
+    <string>metro.icns</string>
 </dict>
 </plist>
