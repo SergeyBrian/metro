@@ -46,7 +46,6 @@
     </property>
     <addaction name="actionNew"/>
     <addaction name="actionOpen"/>
-    <addaction name="actionOpen_recent"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>

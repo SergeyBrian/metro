@@ -18,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
                       "\nOpen: " +
                       ui->actionOpen->shortcut().toString(QKeySequence::NativeText);
     ui->noFileOpen->setText(newText);
+    showRecentFilesMenu(ui->menuFile, this);
 }
 
 MainWindow::~MainWindow() {
@@ -52,10 +53,17 @@ void MainWindow::openFile(const QString &filename, const QString &filename_base)
         this->close();
         metroWindow->activateWindow();
         metroWindow->showMaximized();
+        addToRecentFiles(filename);
     } catch (const metro::FilesysException &e) {
         QMessageBox::critical(this, "Error", QString::fromStdString(e.what()));
     } catch (const std::runtime_error &e) {
         QMessageBox::critical(this, "Error", "Error reading file");
     }
+}
+
+void MainWindow::on_actionOpenRecentTriggered() {
+    auto action = dynamic_cast<QAction *>(QObject::sender());
+    auto filename = action->data().value<QString>();
+    openFile(filename, QFileInfo(filename).baseName());
 }
 

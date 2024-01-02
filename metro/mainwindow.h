@@ -7,6 +7,7 @@
 #include <QDebug>
 #include <QStatusBar>
 #include <QMessageBox>
+#include <QSettings>
 
 #include "generatedialog.h"
 #include "metrowindow.h"
@@ -25,6 +26,8 @@ public:
 
     ~MainWindow();
 
+public slots:
+
     void openFile(const QString &filename, const QString &filename_base);
 
 private:
@@ -36,6 +39,8 @@ private slots:
     void on_actionNew_triggered();
 
     void on_actionOpen_triggered();
+
+    void on_actionOpenRecentTriggered();
 };
 
 #endif // MAINWINDOW_H

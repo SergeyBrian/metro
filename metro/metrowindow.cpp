@@ -18,6 +18,7 @@ MetroWindow::MetroWindow(metro::Metro *metro, QWidget *parent)
     gView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     scene = new QGraphicsScene();
     gView->setScene(scene);
+    showRecentFilesMenu(ui->menuFile, this);
     redraw();
 }
 
@@ -169,6 +170,7 @@ void MetroWindow::on_actionOpen_triggered() {
     try {
         metro::loadFromFile(filename.toStdString(), metro);
         redraw();
+        addToRecentFiles(filename);
     } catch (const metro::FilesysException &e) {
         QMessageBox::critical(this, "Error", QString::fromStdString(e.what()));
     } catch (const std::runtime_error &e) {
@@ -187,5 +189,14 @@ void MetroWindow::on_actionSave_as_triggered() {
     if (!selectFileSave(&filename, &filename_base)) return;
     metro::saveToFile(filename.toStdString(), metro);
     redraw();
+    addToRecentFiles(filename);
+}
+
+void MetroWindow::on_actionOpenRecentTriggered() {
+    auto action = dynamic_cast<QAction *>(QObject::sender());
+    filename = action->data().value<QString>();
+    metro::loadFromFile(filename.toStdString(), metro);
+    redraw();
+    addToRecentFiles(filename);
 }
 

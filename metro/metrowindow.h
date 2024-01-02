@@ -7,6 +7,7 @@
 #include <QGraphicsRectItem>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QAction>
 
 #include "generatedialog.h"
 
@@ -52,6 +53,8 @@ private slots:
     void on_actionOpen_triggered();
 
     void on_actionSave_as_triggered();
+
+    void on_actionOpenRecentTriggered();
 
 private:
     Ui::MetroWindow *ui;
