@@ -6,7 +6,7 @@ bool loadFromFile(const QString &filename, metro::Metro *metro) {
         return true;
     }
     catch (const metro::InvalidVersionException &e) {
-        QMessageBox::StandardButton useLegacy = QMessageBox::question(nullptr, "Incompatible file version",
+        QMessageBox::StandardButton useLegacy = QMessageBox::critical(nullptr, "Incompatible file version",
                                                                       "Incompatible file version. Try loading anyway?",
                                                                       QMessageBox::Yes | QMessageBox::No);
         if (useLegacy == QMessageBox::Yes) {

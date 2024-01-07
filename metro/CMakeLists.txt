@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(Metro VERSION 2.0.0 LANGUAGES CXX)
+project(Metro VERSION 2.0.1 LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 

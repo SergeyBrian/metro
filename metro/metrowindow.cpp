@@ -200,6 +200,7 @@ void MetroWindow::on_actionOpen_triggered() {
 MetroWindow::MetroWindow(const QString &filename, const QString &filename_base, QWidget *parent) : MetroWindow(
         new metro::Metro(), parent) {
     this->filename_base = filename_base;
+    this->filename = filename;
     if (!loadFromFile(filename, metro)) throw std::runtime_error("fail");
 }
 
