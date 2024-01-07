@@ -6,8 +6,8 @@ namespace metro {
             case STUPID:
                 return new StupidSearcher();
                 break;
-            default:
-                throw InvalidSearchMethodException();
+//            default:
+//                throw InvalidSearchMethodException();
         }
     }
 

@@ -96,8 +96,9 @@ namespace metro {
             branch_stations.push_back(branch.end);
             branch_stations.push_back(branch.begin);
             std::sort(branch_stations.begin(), branch_stations.end(),
-                      [](const Station *a, const Station *b) {
-                          return (a->pos.x < b->pos.x) || (a->pos.x == b->pos.x && a->pos.y < b->pos.y);
+                      [&](const Station *a, const Station *b) {
+                          return getDistanceSquared(branch.begin->pos, a->pos) <
+                                 getDistanceSquared(branch.begin->pos, b->pos);
                       });
             for (int i = 0; i < branch_stations.size() - 1; i++) {
                 bindStations(branch_stations[i], branch_stations[i + 1]);

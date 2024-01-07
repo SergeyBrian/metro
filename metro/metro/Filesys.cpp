@@ -43,8 +43,8 @@ void metro::loadFromFile(const std::string &filename, metro::Metro *metro) {
     if (file.fail()) throw FileNotFoundException();
     int version;
     int filetype_version;
-    char filetype_marker[strlen(METRO_FILETYPE_MARKER_STR) + 1];
-    file.read(filetype_marker, strlen(METRO_FILETYPE_MARKER_STR) + 1);
+    char filetype_marker[sizeof(METRO_FILETYPE_MARKER_STR)];
+    file.read(filetype_marker, sizeof(METRO_FILETYPE_MARKER_STR));
     if (std::strcmp(filetype_marker, METRO_FILETYPE_MARKER_STR)) throw NotMetroFileException();
     file.read(reinterpret_cast<char *>(&version), sizeof(version));
     file.read(reinterpret_cast<char *>(&filetype_version), sizeof(filetype_version));
