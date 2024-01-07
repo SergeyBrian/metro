@@ -22,11 +22,10 @@ namespace metro {
     bool Route::calculate(RouteSearchMethod method) {
         if (target_stations.size() < 2) return false;
         route.clear();
-        switch (method) {
-            case STUPID:
-                return stupidSearch();
-                break;
-        }
+        ISearcher *searcher = getSearcher(method);
+        bool status = searcher->findShortestRoute(target_stations, &route);
+        delete searcher;
+        return status;
     }
 
     void Route::clear() {
@@ -34,9 +33,7 @@ namespace metro {
         route.clear();
     }
 
-    bool Route::stupidSearch() {
-        Station *begin = target_stations.front();
-        route.push_back(begin);
-        return true;
+    std::vector<Station *> Route::getTargetStations() {
+        return target_stations;
     }
 }

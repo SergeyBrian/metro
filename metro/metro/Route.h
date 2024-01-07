@@ -3,6 +3,7 @@
 
 #include "Utils.h"
 #include "Station.h"
+#include "search/Search.h"
 
 /*
  * Как считать эвристическую функцию:
@@ -13,10 +14,6 @@
  */
 
 namespace metro {
-    enum RouteSearchMethod {
-        STUPID,
-    };
-
     class Route {
         std::vector<Station *> target_stations;
         std::vector<Station *> route;
@@ -27,6 +24,8 @@ namespace metro {
         Route();
 
         std::vector<Station *> getRoute();
+
+        std::vector<Station *> getTargetStations();
 
         void addStation(Station *station);
 

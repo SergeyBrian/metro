@@ -151,6 +151,12 @@ void MetroWindow::stationPressCallback(QGraphicsItem *stationMarker) {
     bool selected = _stationMarker->toggleSelect();
     if (selected) metro->addStationToRoute(_stationMarker->Station());
     else metro->removeStationFromRoute(_stationMarker->Station());
+    printf("Building route for targets:\n");
+    for (const auto &station: metro->route.getTargetStations()) {
+        printf("%s -> ", station->name.c_str());
+    }
+    printf("\n");
+    printf("Result:\n");
     for (const auto &station: metro->route.getRoute()) {
         printf("%s -> ", station->name.c_str());
     }

@@ -52,6 +52,12 @@ set(PROJECT_SOURCES
         metro/Exceptions.h
         metroapp.cpp
         metroapp.h
+        metro/search/ISearcher.cpp
+        metro/search/ISearcher.h
+        metro/search/StupidSearcher.cpp
+        metro/search/StupidSearcher.h
+        metro/search/Search.h
+        metro/search/Search.cpp
 )
 
 if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
