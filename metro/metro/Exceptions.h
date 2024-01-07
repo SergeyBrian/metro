@@ -6,7 +6,7 @@
 namespace metro {
     class FilesysException : public std::runtime_error {
     public:
-        FilesysException(const char *msg);
+        explicit FilesysException(const char *msg);
     };
 
     class InvalidVersionException : public FilesysException {

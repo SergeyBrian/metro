@@ -1,5 +1,5 @@
-#ifndef METRO_EXCEPTIONS_H
-#define METRO_EXCEPTIONS_H
+#ifndef METRO_SEARCH_EXCEPTIONS_H
+#define METRO_SEARCH_EXCEPTIONS_H
 
 #include <stdexcept>
 
@@ -15,4 +15,4 @@ namespace metro {
     };
 }
 
-#endif //METRO_EXCEPTIONS_H
+#endif //METRO_SEARCH_EXCEPTIONS_H
