@@ -1,7 +1,7 @@
 #include "Filesys.h"
 
 #define METRO_FILETYPE_MARKER_STR "METRO_SCHEME"
-#define METRO_FILETYPE_VERSION 2
+#define METRO_FILETYPE_VERSION 3
 
 void metro::saveToFile(const std::string &filename, metro::Metro *metro) {
     auto file = std::ofstream(filename, std::ios::binary | std::ios::out);
@@ -29,7 +29,17 @@ void metro::saveToFile(const std::string &filename, metro::Metro *metro) {
     file.write(reinterpret_cast<const char *>(&branch_count), sizeof(&branch_count));
     for (const auto &branch: metro->branches) {
         auto fbranch = FBranch(&branch.second);
-        file.write(reinterpret_cast<const char *>(&fbranch), sizeof(fbranch));
+        file.write(reinterpret_cast<const char *>(&fbranch.id), sizeof(fbranch.id));
+        file.write(reinterpret_cast<const char *>(&fbranch.begin_id), sizeof(fbranch.begin_id));
+        file.write(reinterpret_cast<const char *>(&fbranch.end_id), sizeof(fbranch.end_id));
+        file.write(reinterpret_cast<const char *>(&fbranch.color.id), sizeof(fbranch.color.id));
+        size_t color_name_size = fbranch.color.name.length();
+        file.write(reinterpret_cast<const char *>(&color_name_size), sizeof(color_name_size));
+        file.write(reinterpret_cast<const char *>(fbranch.color.name.data()), color_name_size);
+        file.write(reinterpret_cast<const char *>(&fbranch.color.rgb.r), sizeof(fbranch.color.rgb.r));
+        file.write(reinterpret_cast<const char *>(&fbranch.color.rgb.g), sizeof(fbranch.color.rgb.g));
+        file.write(reinterpret_cast<const char *>(&fbranch.color.rgb.b), sizeof(fbranch.color.rgb.b));
+        file.write(reinterpret_cast<const char *>(&fbranch.stations_count), sizeof(fbranch.stations_count));
     }
     file.write(reinterpret_cast<const char *>(&metro->center), sizeof(metro->center));
     file.close();
@@ -48,8 +58,8 @@ void metro::loadFromFile(const std::string &filename, metro::Metro *metro) {
     if (std::strcmp(filetype_marker, METRO_FILETYPE_MARKER_STR)) throw NotMetroFileException();
     file.read(reinterpret_cast<char *>(&version), sizeof(version));
     file.read(reinterpret_cast<char *>(&filetype_version), sizeof(filetype_version));
-    if (version != 2) throw InvalidVersionException();
-    if (filetype_version != 2) throw InvalidVersionException();
+    if (version != METRO_LIB_VERSION) throw InvalidVersionException(version);
+    if (filetype_version != METRO_FILETYPE_VERSION) throw InvalidVersionException(filetype_version);
     unsigned long station_count;
     file.read(reinterpret_cast<char *>(&station_count), sizeof(station_count));
     if (station_count < METRO_MIN_STATIONS_COUNT || station_count > METRO_MAX_STATIONS_COUNT)
@@ -76,7 +86,19 @@ void metro::loadFromFile(const std::string &filename, metro::Metro *metro) {
         throw DamagedFileException();
     for (int i = 0; i < branch_count; i++) {
         FBranch fbranch = {};
-        file.read(reinterpret_cast<char *>(&fbranch), sizeof(fbranch));
+        file.read(reinterpret_cast<char *>(&fbranch.id), sizeof(fbranch.id));
+        file.read(reinterpret_cast<char *>(&fbranch.begin_id), sizeof(fbranch.begin_id));
+        file.read(reinterpret_cast<char *>(&fbranch.end_id), sizeof(fbranch.end_id));
+        file.read(reinterpret_cast<char *>(&fbranch.color.id), sizeof(fbranch.color.id));
+        size_t color_name_size;
+        file.read(reinterpret_cast<char *>(&color_name_size), sizeof(color_name_size));
+        std::vector<char> color_name_buf(color_name_size);
+        file.read(reinterpret_cast<char *>(color_name_buf.data()), color_name_size);
+        fbranch.color.name = std::string(color_name_buf.begin(), color_name_buf.end());
+        file.read(reinterpret_cast<char *>(&fbranch.color.rgb.r), sizeof(fbranch.color.rgb.r));
+        file.read(reinterpret_cast<char *>(&fbranch.color.rgb.g), sizeof(fbranch.color.rgb.g));
+        file.read(reinterpret_cast<char *>(&fbranch.color.rgb.b), sizeof(fbranch.color.rgb.b));
+        file.read(reinterpret_cast<char *>(&fbranch.stations_count), sizeof(fbranch.stations_count));
         fbranches.insert({fbranch.id, fbranch});
     }
     std::unordered_map<int, Station *> stations_map;

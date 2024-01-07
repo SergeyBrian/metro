@@ -191,28 +191,22 @@ void MetroWindow::on_actionSave_triggered() {
 
 void MetroWindow::on_actionOpen_triggered() {
     if (!selectFileOpen(&filename, &filename_base)) return;
-    try {
-        metro::loadFromFile(filename.toStdString(), metro);
-        selectedStations.clear();
-        redraw();
-        addToRecentFiles(filename);
-    } catch (const metro::FilesysException &e) {
-        QMessageBox::critical(this, "Error", QString::fromStdString(e.what()));
-    } catch (const std::runtime_error &e) {
-        QMessageBox::critical(this, "Error", "Error reading file");
-    }
+    if (!loadFromFile(filename, metro)) return;
+    selectedStations.clear();
+    redraw();
+    addToRecentFiles(filename);
 }
 
 MetroWindow::MetroWindow(const QString &filename, const QString &filename_base, QWidget *parent) : MetroWindow(
         new metro::Metro(), parent) {
     this->filename_base = filename_base;
-    metro::loadFromFile(filename.toStdString(), metro);
+    if (!loadFromFile(filename, metro)) throw std::runtime_error("fail");
 }
 
 
 void MetroWindow::on_actionSave_as_triggered() {
     if (!selectFileSave(&filename, &filename_base)) return;
-    metro::saveToFile(filename.toStdString(), metro);
+    if (!saveToFile(filename, metro)) return;
     redraw();
     addToRecentFiles(filename);
 }
@@ -220,7 +214,7 @@ void MetroWindow::on_actionSave_as_triggered() {
 void MetroWindow::on_actionOpenRecentTriggered() {
     auto action = dynamic_cast<QAction *>(QObject::sender());
     filename = action->data().value<QString>();
-    metro::loadFromFile(filename.toStdString(), metro);
+    if (!loadFromFile(filename, metro)) return;
     selectedStations.clear();
     redraw();
     addToRecentFiles(filename);

@@ -15,6 +15,7 @@
 #include "metro/Metro.h"
 #include "metro/Filesys.h"
 #include "fileselector.h"
+#include "filesys.h"
 
 namespace Ui {
     class MetroWindow;

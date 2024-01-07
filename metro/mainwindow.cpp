@@ -50,16 +50,14 @@ void MainWindow::openFile(const QString &filename, const QString &filename_base)
     MetroWindow *metroWindow;
     try {
         metroWindow = new MetroWindow(filename, filename_base);
-
-        this->close();
-        metroWindow->activateWindow();
-        metroWindow->showMaximized();
-        addToRecentFiles(filename);
-    } catch (const metro::FilesysException &e) {
-        QMessageBox::critical(this, "Error", QString::fromStdString(e.what()));
     } catch (const std::runtime_error &e) {
-        QMessageBox::critical(this, "Error", "Error reading file");
+        return;
     }
+
+    this->close();
+    metroWindow->activateWindow();
+    metroWindow->showMaximized();
+    addToRecentFiles(filename);
 }
 
 void MainWindow::on_actionOpenRecentTriggered() {

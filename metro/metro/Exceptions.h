@@ -11,7 +11,9 @@ namespace metro {
 
     class InvalidVersionException : public FilesysException {
     public:
-        InvalidVersionException();
+        int version;
+
+        explicit InvalidVersionException(int version);
     };
 
     class NotMetroFileException : public FilesysException {

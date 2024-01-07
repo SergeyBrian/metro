@@ -60,6 +60,12 @@ set(PROJECT_SOURCES
         metro/search/Search.cpp
         metro/search/Exceptions.cpp
         metro/search/Exceptions.h
+        metro/legacy_filesys/LegacyFilesys.cpp
+        metro/legacy_filesys/LegacyFilesys.h
+        metro/legacy_filesys/Filesys_v2.cpp
+        metro/legacy_filesys/Filesys_v2.h
+        filesys.cpp
+        filesys.h
 )
 
 if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
