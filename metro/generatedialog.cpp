@@ -12,6 +12,7 @@ GenerateDialog::~GenerateDialog() {
 
 void GenerateDialog::on_stationsSpinBox_valueChanged(int arg1) {
     ui->branchesSpinBox->setMaximum(arg1);
+    if (arg1 > 500) ui->minDistanceSpinBox->setMaximum(0);
 }
 
 

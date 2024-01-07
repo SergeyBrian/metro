@@ -10,9 +10,22 @@ MetroWindow::MetroWindow(metro::Metro *metro, QWidget *parent)
     showCenterMarker = false;
     showBranchTrace = false;
     this->filename_base = "* New metro";
+    QSettings settings;
+    searchMethod = settings.value("search_method", metro->search_method).value<metro::RouteSearchMethod>();
 
     ui->setupUi(this);
+    ui->actionRoute_info->setDisabled(true);
+    methodMenu = ui->menuNavigator->addMenu("Search method");
+    for (int i = 0; i < metro::ROUTE_SEARCH_METHOD_COUNT; i++) {
+        QString method_name = QString::fromStdString(metro::search_method_name[i]);
+        QAction *action = methodMenu->addAction(method_name, this, SLOT(on_actionSearchMethodTriggered()));
+        action->setCheckable(true);
+        action->setChecked(i == searchMethod);
+        action->setData(i);
+    }
+
     this->metro = metro;
+    metro->search_method = searchMethod;
     gView = ui->graphicsView;
     gView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     gView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -153,6 +166,7 @@ void MetroWindow::stationPressCallback(QGraphicsItem *stationMarker) {
     bool routeStatus;
     if (selected) routeStatus = metro->addStationToRoute(_stationMarker->Station());
     else routeStatus = metro->removeStationFromRoute(_stationMarker->Station());
+    ui->actionRoute_info->setEnabled(routeStatus);
     selectedStations[_stationMarker->Station()->id] = selected;
     drawRoute();
     printf("Building route for targets:\n");
@@ -233,3 +247,29 @@ void MetroWindow::drawRoute() {
     }
 }
 
+
+void MetroWindow::on_actionClear_route_triggered() {
+    selectedStations.clear();
+    metro->route.clear();
+    routeLines.clear();
+    redraw();
+}
+
+
+void MetroWindow::on_actionRoute_info_triggered() {
+    QString route_info = "Route length: " + QString::number(metro->route.length()) +
+                         "\nStations visited: " + QString::number(metro->route.getRoute().size());
+    QMessageBox::information(this, "Route info", route_info);
+}
+
+void MetroWindow::on_actionSearchMethodTriggered() {
+    auto action = dynamic_cast<QAction *>(QObject::sender());
+    auto method = action->data().value<metro::RouteSearchMethod>();
+    searchMethod = method;
+    metro->search_method = method;
+    QSettings settings;
+    settings.setValue("search_method", method);
+    for (const auto &a: methodMenu->actions()) {
+        a->setChecked(a->data().value<metro::RouteSearchMethod>() == method);
+    }
+}

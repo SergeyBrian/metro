@@ -12,7 +12,7 @@ namespace metro {
 
         void findAllRoutes(const std::vector<Station *> &targetStations, std::vector<Station *> curr_route);
 
-        std::vector<Station *> selectShortestRoute();
+        std::vector<Station *> selectShortestRoute(bool *status);
 
     public:
         bool findShortestRoute(const std::vector<Station *> &targetStations, std::vector<Station *> *route) override;

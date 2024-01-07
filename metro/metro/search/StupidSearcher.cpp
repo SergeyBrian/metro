@@ -6,8 +6,9 @@ namespace metro {
     bool StupidSearcher::findShortestRoute(const std::vector<Station *> &targetStations,
                                            std::vector<Station *> *route) {
         findAllRoutes(targetStations, {targetStations.front()});
-        *route = selectShortestRoute();
-        return true;
+        bool status;
+        *route = selectShortestRoute(&status);
+        return status;
     }
 
     void StupidSearcher::findAllRoutes(const std::vector<Station *> &targetStations,
@@ -32,7 +33,7 @@ namespace metro {
         }
     }
 
-    std::vector<Station *> StupidSearcher::selectShortestRoute() {
+    std::vector<Station *> StupidSearcher::selectShortestRoute(bool *status) {
         int min_route_len = INT_MAX;
         std::vector<Station *> shortest_route;
         for (const auto &route: allRoutes) {
@@ -45,6 +46,7 @@ namespace metro {
                 shortest_route = route;
             }
         }
+        *status = !shortest_route.empty();
         return shortest_route;
     }
 }

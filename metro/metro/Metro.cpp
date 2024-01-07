@@ -9,6 +9,7 @@ namespace metro {
                 .min_distance = 2,
                 .intersect_threshold = 4,
         };
+        search_method = STUPID;
     }
 
     void Metro::generate(Params params) {
@@ -141,14 +142,14 @@ namespace metro {
 
     bool Metro::addStationToRoute(Station *station) {
         route.addStation(station);
-        bool route_status = route.calculate(STUPID);
+        bool route_status = route.calculate(search_method);
         if (!route_status) route.resetResult();
         return route_status;
     }
 
     bool Metro::removeStationFromRoute(Station *station) {
         route.removeStation(station);
-        bool route_status = route.calculate(STUPID);
+        bool route_status = route.calculate(search_method);
         if (!route_status) route.resetResult();
         return route_status;
     }

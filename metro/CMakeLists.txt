@@ -58,6 +58,8 @@ set(PROJECT_SOURCES
         metro/search/StupidSearcher.h
         metro/search/Search.h
         metro/search/Search.cpp
+        metro/search/Exceptions.cpp
+        metro/search/Exceptions.h
 )
 
 if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)

@@ -18,8 +18,6 @@ namespace metro {
         std::vector<Station *> target_stations;
         std::vector<Station *> route;
 
-        bool stupidSearch();
-
     public:
         Route();
 
@@ -36,6 +34,8 @@ namespace metro {
         void clear();
 
         void resetResult();
+
+        int length();
     };
 }
 

@@ -61,9 +61,24 @@
     <addaction name="actionShow_center_marker"/>
     <addaction name="actionShow_branch_traces"/>
    </widget>
+   <widget class="QMenu" name="menuTools">
+    <property name="title">
+     <string>Tools</string>
+    </property>
+    <widget class="QMenu" name="menuNavigator">
+     <property name="title">
+      <string>Navigator</string>
+     </property>
+     <addaction name="actionClear_route"/>
+     <addaction name="actionRoute_info"/>
+     <addaction name="separator"/>
+    </widget>
+    <addaction name="menuNavigator"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
    <addaction name="menuView"/>
+   <addaction name="menuTools"/>
   </widget>
   <action name="actionNew">
    <property name="text">
@@ -143,6 +158,21 @@
    </property>
    <property name="text">
     <string>Show branch traces</string>
+   </property>
+  </action>
+  <action name="actionClear_route">
+   <property name="text">
+    <string>Clear route</string>
+   </property>
+  </action>
+  <action name="actionRoute_info">
+   <property name="text">
+    <string>Route info</string>
+   </property>
+  </action>
+  <action name="actionSearch_method">
+   <property name="text">
+    <string>Search method</string>
    </property>
   </action>
  </widget>

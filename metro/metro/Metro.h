@@ -39,6 +39,8 @@ namespace metro {
         bool addStationToRoute(Station *station);
 
         bool removeStationFromRoute(Station *station);
+
+        RouteSearchMethod search_method;
     };
 }
 

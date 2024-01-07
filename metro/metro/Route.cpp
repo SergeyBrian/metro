@@ -40,4 +40,12 @@ namespace metro {
     void Route::resetResult() {
         route.clear();
     }
+
+    int Route::length() {
+        int len = 0;
+        for (int i = 0; i < route.size() - 1; i++) {
+            len += getDistanceSquared(route.at(i)->pos, route.at(i + 1)->pos);
+        }
+        return len;
+    }
 }

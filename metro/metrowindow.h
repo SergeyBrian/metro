@@ -56,6 +56,12 @@ private slots:
 
     void on_actionOpenRecentTriggered();
 
+    void on_actionSearchMethodTriggered();
+
+    void on_actionClear_route_triggered();
+
+    void on_actionRoute_info_triggered();
+
 private:
     Ui::MetroWindow *ui;
     QGraphicsView *gView;
@@ -85,6 +91,10 @@ private:
     void drawRoute();
 
     std::vector<QGraphicsLineItem *> routeLines;
+
+    metro::RouteSearchMethod searchMethod;
+
+    QMenu *methodMenu;
 };
 
 #endif // METROWINDOW_H
