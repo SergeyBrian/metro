@@ -26,7 +26,7 @@ void metro::saveToFile(const std::string &filename, metro::Metro *metro) {
         file.write(reinterpret_cast<const char *>(fstation.connections.data()), sizeof(int) * connections_size);
     }
     unsigned long branch_count = metro->branches.size();
-    file.write(reinterpret_cast<const char *>(&branch_count), sizeof(&branch_count));
+    file.write(reinterpret_cast<const char *>(&branch_count), sizeof(branch_count));
     for (const auto &branch: metro->branches) {
         auto fbranch = FBranch(&branch.second);
         file.write(reinterpret_cast<const char *>(&fbranch.id), sizeof(fbranch.id));

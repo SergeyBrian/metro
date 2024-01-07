@@ -246,6 +246,7 @@ void MetroWindow::on_actionClear_route_triggered() {
     selectedStations.clear();
     metro->route.clear();
     routeLines.clear();
+    ui->actionRoute_info->setDisabled(true);
     redraw();
 }
 
