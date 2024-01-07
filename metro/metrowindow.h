@@ -79,6 +79,12 @@ private:
 
     QString filename;
     QString filename_base;
+
+    std::map<int, bool> selectedStations;
+
+    void drawRoute();
+
+    std::vector<QGraphicsLineItem *> routeLines;
 };
 
 #endif // METROWINDOW_H

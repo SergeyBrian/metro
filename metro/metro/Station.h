@@ -14,6 +14,14 @@ namespace metro {
         int branch_id;
 
         std::vector<Station *> connections;
+
+        inline bool operator==(Station s) {
+            return s.id == id;
+        }
+
+        inline bool operator==(Station *s) {
+            return s->id == id;
+        }
     };
 
     void bindStations(Station *a, Station *b);

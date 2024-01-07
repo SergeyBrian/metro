@@ -139,13 +139,17 @@ namespace metro {
         }
     }
 
-    void Metro::addStationToRoute(Station *station) {
+    bool Metro::addStationToRoute(Station *station) {
         route.addStation(station);
-        route.calculate(STUPID);
+        bool route_status = route.calculate(STUPID);
+        if (!route_status) route.resetResult();
+        return route_status;
     }
 
-    void Metro::removeStationFromRoute(Station *station) {
+    bool Metro::removeStationFromRoute(Station *station) {
         route.removeStation(station);
-        route.calculate(STUPID);
+        bool route_status = route.calculate(STUPID);
+        if (!route_status) route.resetResult();
+        return route_status;
     }
 }

@@ -36,9 +36,9 @@ namespace metro {
         Position center{};
         Params old_params{};
 
-        void addStationToRoute(Station *station);
+        bool addStationToRoute(Station *station);
 
-        void removeStationFromRoute(Station *station);
+        bool removeStationFromRoute(Station *station);
     };
 }
 

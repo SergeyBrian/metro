@@ -36,4 +36,8 @@ namespace metro {
     std::vector<Station *> Route::getTargetStations() {
         return target_stations;
     }
+
+    void Route::resetResult() {
+        route.clear();
+    }
 }

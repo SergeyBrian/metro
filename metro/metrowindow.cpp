@@ -60,6 +60,7 @@ void MetroWindow::drawScheme() {
         stationMarker->Station(station);
         connect(stationMarker->Helper(), &GraphicsItemHelper::itemClicked, this, &MetroWindow::stationPressCallback);
         stationMarker->addToScene(scene);
+        if (selectedStations[station->id]) stationMarker->toggleSelect();
         metro::Branch branch = metro->getBranchByStation(*station);
         metro::Color color = branch.color;
         QColor branchQColor = QColor::fromRgb(color.rgb.r, color.rgb.g, color.rgb.b);
@@ -149,8 +150,11 @@ void MetroWindow::stationPressCallback(QGraphicsItem *stationMarker) {
     auto _stationMarker = dynamic_cast<StationEllipse *>(stationMarker);
     qDebug() << "Station " << QString::fromStdString(_stationMarker->Station()->name) << " pressed";
     bool selected = _stationMarker->toggleSelect();
-    if (selected) metro->addStationToRoute(_stationMarker->Station());
-    else metro->removeStationFromRoute(_stationMarker->Station());
+    bool routeStatus;
+    if (selected) routeStatus = metro->addStationToRoute(_stationMarker->Station());
+    else routeStatus = metro->removeStationFromRoute(_stationMarker->Station());
+    selectedStations[_stationMarker->Station()->id] = selected;
+    drawRoute();
     printf("Building route for targets:\n");
     for (const auto &station: metro->route.getTargetStations()) {
         printf("%s -> ", station->name.c_str());
@@ -175,6 +179,7 @@ void MetroWindow::on_actionOpen_triggered() {
     if (!selectFileOpen(&filename, &filename_base)) return;
     try {
         metro::loadFromFile(filename.toStdString(), metro);
+        selectedStations.clear();
         redraw();
         addToRecentFiles(filename);
     } catch (const metro::FilesysException &e) {
@@ -202,7 +207,29 @@ void MetroWindow::on_actionOpenRecentTriggered() {
     auto action = dynamic_cast<QAction *>(QObject::sender());
     filename = action->data().value<QString>();
     metro::loadFromFile(filename.toStdString(), metro);
+    selectedStations.clear();
     redraw();
     addToRecentFiles(filename);
+}
+
+void MetroWindow::drawRoute() {
+    for (const auto &line: routeLines) {
+        scene->removeItem(line);
+    }
+    routeLines.clear();
+
+    std::vector<metro::Station *> route = metro->route.getRoute();
+    if (route.size() < 2) return;
+    for (int i = 0; i < route.size() - 1; i++) {
+        metro::Station *cur = route.at(i);
+        metro::Station *next = route.at(i + 1);
+        QGraphicsLineItem *line = scene->addLine(getRealX(cur->pos.x), getRealY(cur->pos.y),
+                                                 getRealX(next->pos.x), getRealY(next->pos.y));
+        auto pen = QPen(Qt::red);
+        pen.setStyle(Qt::SolidLine);
+        pen.setWidth(5);
+        line->setPen(pen);
+        routeLines.push_back(line);
+    }
 }
 

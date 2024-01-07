@@ -34,6 +34,8 @@ namespace metro {
         bool calculate(RouteSearchMethod method);
 
         void clear();
+
+        void resetResult();
     };
 }
 
