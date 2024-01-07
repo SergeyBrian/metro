@@ -14,15 +14,28 @@
 
 namespace metro {
     enum RouteSearchMethod {
-        DIJKSTRA,
+        STUPID,
     };
 
-    struct Route {
+    class Route {
         std::vector<Station *> target_stations;
         std::vector<Station *> route;
-    };
 
-    bool calculateRoute(Route *route, RouteSearchMethod method);
+        bool stupidSearch();
+
+    public:
+        Route();
+
+        std::vector<Station *> getRoute();
+
+        void addStation(Station *station);
+
+        void removeStation(Station *station);
+
+        bool calculate(RouteSearchMethod method);
+
+        void clear();
+    };
 }
 
 #endif //METRO_ROUTE_H

@@ -1,19 +1,42 @@
 #include "Route.h"
 
 namespace metro {
-    bool dijkstraSearch(Route *route) {
-        Station *begin = route->target_stations.front();
-        route->route.push_back(begin);
-        return true;
+    Route::Route() = default;
+
+    std::vector<Station *> Route::getRoute() {
+        return route;
     }
 
-    bool calculateRoute(Route *route, RouteSearchMethod method) {
-        if (route->target_stations.size() < 2) return false;
-        route->route.clear();
+    void Route::addStation(Station *station) {
+        target_stations.push_back(station);
+    }
+
+    void Route::removeStation(Station *station) {
+        target_stations.erase(
+                std::remove_if(target_stations.begin(), target_stations.end(),
+                               [&](Station *s) { return s->id == station->id; }),
+                target_stations.end()
+        );
+    }
+
+    bool Route::calculate(RouteSearchMethod method) {
+        if (target_stations.size() < 2) return false;
+        route.clear();
         switch (method) {
-            case DIJKSTRA:
-                return dijkstraSearch(route);
+            case STUPID:
+                return stupidSearch();
                 break;
         }
+    }
+
+    void Route::clear() {
+        target_stations.clear();
+        route.clear();
+    }
+
+    bool Route::stupidSearch() {
+        Station *begin = target_stations.front();
+        route.push_back(begin);
+        return true;
     }
 }
