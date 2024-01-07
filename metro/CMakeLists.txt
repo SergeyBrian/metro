@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(Metro VERSION 2.0.1 LANGUAGES CXX)
+project(Metro VERSION 2.1.0 LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -64,6 +64,8 @@ set(PROJECT_SOURCES
         metro/legacy_filesys/Filesys_v2.h
         filesys.cpp
         filesys.h
+        metro/search/AStarSearcher.cpp
+        metro/search/AStarSearcher.h
 )
 
 if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
