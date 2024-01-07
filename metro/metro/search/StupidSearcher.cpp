@@ -15,6 +15,10 @@ namespace metro {
         Station *target_station = targetStations.back();
         Station *current_station = curr_route.back();
         if (current_station == target_station) {
+            // Проверяем, что мы посетили все станции, которые заказывали
+            for (auto targetStation: targetStations) {
+                if (std::find(curr_route.begin(), curr_route.end(), targetStation) == curr_route.end()) return;
+            }
             allRoutes.push_back(curr_route);
             return;
         }
