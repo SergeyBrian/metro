@@ -36,13 +36,12 @@ namespace metro {
                 if (visited.contains(station->id)) continue;
                 priority_queue.push_back(new Vertex(
                         station,
-                        current->g + getDistanceSquared(station->pos, current->s->pos),
+                        current->g + 5 * getDistanceSquared(station->pos, current->s->pos),
                         heuristicCost(station),
                         current
                 ));
             }
             std::sort(priority_queue.begin(), priority_queue.end(), [](Vertex const *a, Vertex const *b) {
-                printf("%s: %d > %s: %d\n", a->s->name.c_str(), a->g + a->h, b->s->name.c_str(), b->g + b->h);
                 return a->g + a->h > b->g + b->h;
             });
         }
@@ -57,6 +56,6 @@ namespace metro {
     }
 
     int AStarSearcher::heuristicCost(Station *a) {
-        return 3 * getDistanceSquared(a->pos, target->pos);
+        return getDistanceSquared(a->pos, target->pos);
     }
 }
