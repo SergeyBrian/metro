@@ -1,6 +1,8 @@
 #ifndef METRO_ASTARSEARCHER_H
 #define METRO_ASTARSEARCHER_H
 
+#include <unordered_map>
+
 #include "ISearcher.h"
 #include "Exceptions.h"
 #include "../Utils.h"

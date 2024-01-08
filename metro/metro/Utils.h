@@ -24,6 +24,9 @@ namespace metro {
 
     int squareRadius(const Position &center, const Position &point);
 
+    Position getLineSegmentsIntersection(const Position &a1, const Position &b1,
+                                         const Position &a2, const Position &b2);
+
     Position avgPos(const Position &a, const Position &b);
 }
 
