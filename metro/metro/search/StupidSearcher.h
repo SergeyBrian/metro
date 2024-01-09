@@ -15,7 +15,8 @@ namespace metro {
         std::vector<Station *> selectShortestRoute(bool *status);
 
     public:
-        bool findShortestRoute(const std::vector<Station *> &targetStations, std::vector<Station *> *route) override;
+        bool findShortestRoute(const std::vector<Station *> &targetStations, std::vector<Station *> *route,
+                               bool *stop = nullptr) override;
 
         ~StupidSearcher() override;
     };

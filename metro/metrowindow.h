@@ -13,9 +13,11 @@
 
 #include "stationellipse.h"
 #include "metro/Metro.h"
+#include "metro/tests/Tests.h"
 #include "metro/Filesys.h"
 #include "fileselector.h"
 #include "filesys.h"
+#include "benchmarkdialog.h"
 
 namespace Ui {
     class MetroWindow;
@@ -62,6 +64,8 @@ private slots:
     void on_actionClear_route_triggered();
 
     void on_actionRoute_info_triggered();
+
+    void on_actionRun_benchmark_triggered();
 
 private:
     Ui::MetroWindow *ui;

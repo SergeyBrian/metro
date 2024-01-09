@@ -7,9 +7,13 @@
 namespace metro {
     class ISearcher {
     public:
-        virtual bool findShortestRoute(const std::vector<Station *> &targetStations, std::vector<Station *> *route) = 0;
+        virtual bool findShortestRoute(const std::vector<Station *> &targetStations, std::vector<Station *> *route,
+                                       bool *stop = nullptr) = 0;
 
         virtual ~ISearcher();
+
+    protected:
+        bool *stop;
     };
 }
 

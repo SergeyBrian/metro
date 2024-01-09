@@ -11,8 +11,8 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
+find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets PrintSupport REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets PrintSupport REQUIRED)
 
 set(PROJECT_SOURCES
         main.cpp
@@ -64,19 +64,34 @@ set(PROJECT_SOURCES
         filesys.h
         metro/search/AStarSearcher.cpp
         metro/search/AStarSearcher.h
+        metro/tests/Tests.cpp
+        metro/tests/Tests.h
+        metro/tests/Benchmark.cpp
+        metro/tests/Benchmark.h
+        metro/tests/Exceptions.cpp
+        metro/tests/Exceptions.h
+        benchmarkworker.cpp
+        benchmarkworker.h
+        benchmarkupdatemitter.cpp
+        benchmarkupdatemitter.h
+        lib/qcustomplot.cpp
+        lib/qcustomplot.h
 )
 
 if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(Metro MANUAL_FINALIZATION MACOSX_BUNDLE ${PROJECT_SOURCES}
             generatedialog.h generatedialog.cpp generatedialog.ui
-            metrowindow.h metrowindow.cpp metrowindow.ui)
+            metrowindow.h metrowindow.cpp metrowindow.ui
+            benchmarkdialog.h benchmarkdialog.cpp benchmarkdialog.ui
+            benchmarkviewer.h benchmarkviewer.cpp benchmarkviewer.ui
+    )
 else ()
     add_executable(Metro
             ${PROJECT_SOURCES}
     )
 endif ()
 
-target_link_libraries(Metro PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(Metro PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::PrintSupport)
 
 set_target_properties(Metro PROPERTIES
         MACOSX_BUNDLE TRUE

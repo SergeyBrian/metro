@@ -41,6 +41,7 @@ private slots:
     void on_actionOpen_triggered();
 
     void on_actionOpenRecentTriggered();
+    void on_actionNavigator_benchmark_triggered();
 };
 
 #endif // MAINWINDOW_H
