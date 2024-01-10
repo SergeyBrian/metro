@@ -26,23 +26,25 @@ void metro::Benchmark::run(bool *stop) {
     };
     while (params.stations_count < max_params.stations_count) {
         if (stop && *stop) return;
-        std::unordered_map<RouteSearchMethod, std::vector<Station *>> routes;
         metro->generate(params);
+        std::unordered_map<RouteSearchMethod, std::vector<std::vector<Station *>>> routes;
 
         for (int i = 0; i < ROUTE_SEARCH_METHOD_COUNT; i++) {
             auto method = static_cast<RouteSearchMethod>(i);
             if (disabled_methods[method]) continue;
-            routes[method] = {};
+            routes[method] = std::vector<std::vector<Station *>>(metro->stations.size() * metro->stations.size());
             ISearcher *searcher = getSearcher(method);
             std::chrono::milliseconds time;
             int stations_count_cb_param = 0;
             auto start = std::chrono::high_resolution_clock::now();
+            int Z = 0;
             for (int j = 0; j < metro->stations.size(); j++) {
                 if (stop && *stop) return;
-                for (int k = 0; k < metro->stations.size(); k++) {
+                for (int k = 0; k < metro->stations.size(); k++, Z++) {
                     if (stop && *stop) return;
                     if (j == k) continue;
-                    searcher->findShortestRoute({&metro->stations.at(j), &metro->stations.at(k)}, &routes.at(method),
+                    searcher->findShortestRoute({&metro->stations.at(j), &metro->stations.at(k)},
+                                                &routes.at(method).at(Z),
                                                 stop);
                 }
                 stations_count_cb_param++;
@@ -59,6 +61,16 @@ void metro::Benchmark::run(bool *stop) {
                                               time
                                       });
             delete searcher;
+        }
+        for (int i = 0; i < ROUTE_SEARCH_METHOD_COUNT; i++) {
+            auto method = static_cast<RouteSearchMethod>(i);
+            for (int j = 0; j < routes.at(method).size(); j++) {
+                for (int k = 0; k < routes.at(method).at(j).size(); k++) {
+                    if (routes.at(method).at(j).at(k) != routes.at(STUPID).at(j).at(k)) {
+                        throw MethodDidntMatchTheReferenceException(method, STUPID);
+                    }
+                }
+            }
         }
 
         params.stations_count += 10;
