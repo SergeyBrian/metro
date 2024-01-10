@@ -84,6 +84,25 @@ namespace metro {
             branches[i] = branch;
         }
 
+        for (auto &[id, branch]: branches) {
+            if (!branch.begin) {
+                for (auto &station: stations) {
+                    if (station.branch_id != -1) continue;
+                    branch.begin = &station;
+                    station.branch_id = id;
+                    break;
+                }
+            }
+            if (!branch.end) {
+                for (auto &station: stations) {
+                    if (station.branch_id != -1) continue;
+                    branch.end = &station;
+                    station.branch_id = id;
+                    break;
+                }
+            }
+        }
+
         std::vector<Branch *> branches_temp;
         for (auto &[id, branch]: branches) {
             std::vector<Station *> branch_stations;
