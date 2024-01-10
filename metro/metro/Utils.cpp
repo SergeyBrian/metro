@@ -79,5 +79,33 @@ namespace metro {
                 .y = (a.y + b.y) / 2,
         };
     }
+
+    Position getLineSegmentsIntersection(const Position &a1, const Position &b1,
+                                         const Position &a2, const Position &b2) {
+        float n;
+        if (b1.y - a1.y != 0) {
+            float q = static_cast<float>(b1.x - a1.x) / static_cast<float>(a1.y - b1.y);
+            float sn = static_cast<float>(a2.x - b2.x) + static_cast<float>(a2.y - b2.y) * q;
+            if (sn == 0) return { .x = -1, .y = -1 };
+            float fn = static_cast<float>(a2.x - a1.x) + static_cast<float>(a2.y - a1.y) * q;
+            n = fn / sn;
+        } else {
+            if (!(a2.y - b2.y)) return { .x = -1, .y = -1 };
+            n = static_cast<float>(a2.y - a1.y) / static_cast<float>(a2.y - b2.y);
+        }
+
+        Position result = {
+                .x = a2.x + static_cast<int>(static_cast<float>(b2.x - a2.x) * n),
+                .y = a2.y + static_cast<int>(static_cast<float>(b2.y - a2.y) * n),
+        };
+
+        if ( ((result.x > a1.x && result.x < b1.x) || (result.x < a1.x && result.x > b1.x)) &&
+             ((result.y > a1.y && result.y < b1.y) || (result.y < a1.y && result.y > b1.y)) )
+            return result;
+
+        return { .x = -1,
+                 .y = -1
+        };
+    }
 }
 

@@ -3,6 +3,7 @@
 
 #include <string>
 #include <utility>
+#include <vector>
 
 #include "Position.h"
 
@@ -15,11 +16,11 @@ namespace metro {
 
         std::vector<Station *> connections;
 
-        inline bool operator==(Station s) {
+        inline bool operator==(Station s) const {
             return s.id == id;
         }
 
-        inline bool operator==(Station *s) {
+        inline bool operator==(Station *s) const {
             return s->id == id;
         }
     };

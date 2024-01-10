@@ -5,6 +5,8 @@ namespace metro {
         switch (method) {
             case STUPID:
                 return new StupidSearcher();
+            case A_STAR:
+                return new AStarSearcher();
             default:
                 throw InvalidSearchMethodException();
         }
@@ -12,5 +14,6 @@ namespace metro {
 
     const std::string search_method_name[]{
             "Stupid search",
+            "A* search",
     };
 }

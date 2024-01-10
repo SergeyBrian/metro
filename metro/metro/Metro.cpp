@@ -85,16 +85,77 @@ namespace metro {
         }
 
         for (auto &[id, branch]: branches) {
+            if (!branch.begin) {
+                for (auto &station: stations) {
+                    if (station.branch_id != -1) continue;
+                    branch.begin = &station;
+                    station.branch_id = id;
+                    break;
+                }
+            }
+            if (!branch.end) {
+                for (auto &station: stations) {
+                    if (station.branch_id != -1) continue;
+                    branch.end = &station;
+                    station.branch_id = id;
+                    break;
+                }
+            }
+        }
+
+        std::vector<Branch *> branches_temp;
+        for (auto &[id, branch]: branches) {
             std::vector<Station *> branch_stations;
             for (auto &station: stations) {
                 if (distanceToLineSegment(station.pos, branch.begin->pos, branch.end->pos) >
-                    params.branch_threshold || station.branch_id != -1)
+                    params.branch_threshold || station.branch_id != -1) {
                     continue;
+                }
                 branch_stations.push_back(&station);
                 station.branch_id = branch.id;
             }
             branch_stations.push_back(branch.end);
             branch_stations.push_back(branch.begin);
+            branches_temp.push_back(&branch);
+            branch.stations_count = static_cast<int>(branch_stations.size());
+        }
+
+        std::sort(branches_temp.begin(), branches_temp.end(), [](const Branch *a, const Branch *b) {
+            return a->stations_count < b->stations_count;
+        });
+
+        for (auto branch: branches_temp) {
+            for (auto other_branch: branches_temp) {
+                if (branch->id == other_branch->id) continue;
+                if (branches_connections.at(branch->id).at(other_branch->id)) continue;
+                Position intersection = getLineSegmentsIntersection(branch->begin->pos, branch->end->pos,
+                                                                    other_branch->begin->pos, other_branch->end->pos);
+                if (intersection.x == -1) continue;
+                for (auto &station: stations) {
+                    if (station.branch_id != -1) continue;
+                    for (auto &other_station: stations) {
+                        if (other_station.branch_id != -1) continue;
+                        if (station.id == other_station.id) continue;
+                        station.branch_id = branch->id;
+                        other_station.branch_id = other_branch->id;
+                        station.pos = intersection;
+                        other_station.pos = intersection;
+                        bindStations(&station, &other_station);
+                        branches_connections[station.branch_id][other_station.branch_id] = true;
+                        branches_connections[other_station.branch_id][station.branch_id] = true;
+                        break;
+                    }
+                    break;
+                }
+            }
+        }
+
+        for (auto &[id, branch]: branches) {
+            std::vector<Station *> branch_stations;
+            for (auto &station: stations) {
+                if (station.branch_id != id) continue;
+                branch_stations.push_back(&station);
+            }
             std::sort(branch_stations.begin(), branch_stations.end(),
                       [&](const Station *a, const Station *b) {
                           return getDistanceSquared(branch.begin->pos, a->pos) <

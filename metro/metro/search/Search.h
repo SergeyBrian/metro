@@ -2,11 +2,13 @@
 #define METRO_SEARCH_H
 
 #include "StupidSearcher.h"
+#include "AStarSearcher.h"
 #include "Exceptions.h"
 
 namespace metro {
     enum RouteSearchMethod {
         STUPID,
+        A_STAR,
         ROUTE_SEARCH_METHOD_COUNT
     };
 

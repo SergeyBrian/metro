@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(Metro VERSION 2.0.1 LANGUAGES CXX)
+project(Metro VERSION 2.1.0 LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -19,8 +19,6 @@ set(PROJECT_SOURCES
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
-
-
         metro/Color.cpp
         metro/Color.h
         resources.qrc
@@ -64,32 +62,18 @@ set(PROJECT_SOURCES
         metro/legacy_filesys/Filesys_v2.h
         filesys.cpp
         filesys.h
+        metro/search/AStarSearcher.cpp
+        metro/search/AStarSearcher.h
 )
 
 if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(Metro MANUAL_FINALIZATION MACOSX_BUNDLE ${PROJECT_SOURCES}
             generatedialog.h generatedialog.cpp generatedialog.ui
             metrowindow.h metrowindow.cpp metrowindow.ui)
-    #    qt_add_executable(metro
-    #            MANUAL_FINALIZATION
-    #            ${PROJECT_SOURCES}
-    #    )
-    # Define target properties for Android with Qt 6 as:
-    #    set_property(TARGET metro APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
-    #                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
-    # For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
 else ()
-    if (ANDROID)
-        add_library(Metro SHARED
-                ${PROJECT_SOURCES}
-        )
-        # Define properties for Android with Qt 5 after find_package() calls as:
-        #    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
-    else ()
-        add_executable(Metro
-                ${PROJECT_SOURCES}
-        )
-    endif ()
+    add_executable(Metro
+            ${PROJECT_SOURCES}
+    )
 endif ()
 
 target_link_libraries(Metro PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
