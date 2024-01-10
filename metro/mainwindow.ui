@@ -47,7 +47,14 @@
     <addaction name="actionNew"/>
     <addaction name="actionOpen"/>
    </widget>
+   <widget class="QMenu" name="menuTools">
+    <property name="title">
+     <string>Tools</string>
+    </property>
+    <addaction name="actionNavigator_benchmark"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuTools"/>
   </widget>
   <action name="actionHello">
    <property name="text">
@@ -99,6 +106,11 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+S</string>
+   </property>
+  </action>
+  <action name="actionNavigator_benchmark">
+   <property name="text">
+    <string>Navigator benchmark</string>
    </property>
   </action>
  </widget>

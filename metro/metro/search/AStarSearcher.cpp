@@ -19,6 +19,7 @@ namespace metro {
                 nullptr
         ));
         while (!priority_queue.empty()) {
+            if (stop && *stop) return false;
             Vertex *current = priority_queue.back();
             if (visited.contains(current->s->id)) {
                 priority_queue.pop_back();
@@ -48,9 +49,11 @@ namespace metro {
         return false;
     }
 
-    bool AStarSearcher::findShortestRoute(const std::vector<Station *> &targetStations, std::vector<Station *> *route) {
+    bool AStarSearcher::findShortestRoute(const std::vector<Station *> &targetStations, std::vector<Station *> *route,
+                                          bool *stop) {
         begin = targetStations.front();
         target = targetStations.back();
+        this->stop = stop;
         bool status = AStarAlg(route);
         return status;
     }

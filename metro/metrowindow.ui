@@ -72,6 +72,7 @@
      <addaction name="actionClear_route"/>
      <addaction name="actionRoute_info"/>
      <addaction name="separator"/>
+     <addaction name="actionRun_benchmark"/>
     </widget>
     <addaction name="menuNavigator"/>
    </widget>
@@ -173,6 +174,11 @@
   <action name="actionSearch_method">
    <property name="text">
     <string>Search method</string>
+   </property>
+  </action>
+  <action name="actionRun_benchmark">
+   <property name="text">
+    <string>Run benchmark</string>
    </property>
   </action>
  </widget>

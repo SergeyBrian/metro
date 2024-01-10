@@ -19,7 +19,8 @@ namespace metro {
         bool AStarAlg(std::vector<Station *> *route);
 
     public:
-        bool findShortestRoute(const std::vector<Station *> &targetStations, std::vector<Station *> *route) override;
+        bool findShortestRoute(const std::vector<Station *> &targetStations, std::vector<Station *> *route,
+                               bool *stop = nullptr) override;
 
         ~AStarSearcher() override;
     };

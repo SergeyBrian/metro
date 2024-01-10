@@ -269,3 +269,9 @@ void MetroWindow::on_actionSearchMethodTriggered() {
         a->setChecked(a->data().value<metro::RouteSearchMethod>() == method);
     }
 }
+
+void MetroWindow::on_actionRun_benchmark_triggered() {
+    auto benchmarkDialog = new BenchmarkDialog(this);
+    benchmarkDialog->show();
+}
+

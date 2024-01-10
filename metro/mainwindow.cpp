@@ -66,3 +66,9 @@ void MainWindow::on_actionOpenRecentTriggered() {
     openFile(filename, QFileInfo(filename).baseName());
 }
 
+
+void MainWindow::on_actionNavigator_benchmark_triggered() {
+    auto benchmarkDialog = new BenchmarkDialog(this);
+    benchmarkDialog->show();
+}
+
