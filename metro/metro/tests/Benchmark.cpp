@@ -64,6 +64,7 @@ void metro::Benchmark::run(bool *stop) {
         }
         for (int i = 0; i < ROUTE_SEARCH_METHOD_COUNT; i++) {
             auto method = static_cast<RouteSearchMethod>(i);
+            if (method == STUPID) continue;
             for (int j = 0; j < routes.at(method).size(); j++) {
                 for (int k = 0; k < routes.at(method).at(j).size(); k++) {
                     if (routes.at(method).at(j).at(k) != routes.at(STUPID).at(j).at(k)) {
