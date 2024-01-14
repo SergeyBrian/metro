@@ -11,7 +11,7 @@
 namespace metro {
     struct BenchmarkResult {
         Params params;
-        std::chrono::milliseconds time;
+        double time;
     };
 
     typedef void (*CallbackFunc)(int, void *, void *);
@@ -29,7 +29,7 @@ namespace metro {
         CallbackFunc cb_fun_ptr[CALLBACKS_COUNT];
         void *cb_obj_ptr[CALLBACKS_COUNT];
         void *cb_emitter_ptr[CALLBACKS_COUNT];
-        bool disabled_methods[CALLBACKS_COUNT];
+        bool disabled_methods[ROUTE_SEARCH_METHOD_COUNT];
 
     public:
         explicit Benchmark(Params max_params = {

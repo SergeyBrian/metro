@@ -9,10 +9,11 @@
 
 namespace metro {
     class AStarSearcher : public ISearcher {
+    protected:
         Station *begin;
         Station *target;
 
-        int heuristicCost(Station *a);
+        virtual int heuristicCost(Station *a);
 
         std::unordered_map<int, bool> visited;
 

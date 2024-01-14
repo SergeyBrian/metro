@@ -27,7 +27,7 @@ BenchmarkViewer::BenchmarkViewer(metro::Benchmark *benchmark, QWidget *parent)
             continue;
         }
         for (auto &result: results) {
-            double time = static_cast<double>(result.time.count()) / 1000;
+            double time = result.time / 1000;
             if (time > max_time) max_time = time;
             y.push_back(time);
             x.push_back(result.params.stations_count);
@@ -39,6 +39,7 @@ BenchmarkViewer::BenchmarkViewer(metro::Benchmark *benchmark, QWidget *parent)
         plot->graph(i - reduce)->setPen(QColor::fromRgb(color.rgb.r, color.rgb.g, color.rgb.b));
     }
     plot->yAxis->setRange(plot->yAxis->range().lower, max_time);
+//    plot->yAxis->setScaleType(QCPAxis::stLogarithmic);
     showMaximized();
 }
 

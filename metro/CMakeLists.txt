@@ -76,6 +76,8 @@ set(PROJECT_SOURCES
         benchmarkupdatemitter.h
         lib/qcustomplot.cpp
         lib/qcustomplot.h
+        metro/search/AStarImproved.cpp
+        metro/search/AStarImproved.h
 )
 
 if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -92,6 +94,7 @@ else ()
 endif ()
 
 target_link_libraries(Metro PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::PrintSupport)
+#add_compile_definitions(NO_STATION_CALLBACK)
 
 set_target_properties(Metro PROPERTIES
         MACOSX_BUNDLE TRUE

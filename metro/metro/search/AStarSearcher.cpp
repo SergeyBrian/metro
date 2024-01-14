@@ -60,7 +60,6 @@ namespace metro {
 
     int AStarSearcher::heuristicCost(Station *a) {
         int res = getDistanceSquared(a->pos, target->pos);
-//        if (a->branch_id == target->branch_id) res -= 10;
         return res;
     }
 }
