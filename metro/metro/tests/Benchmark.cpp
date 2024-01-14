@@ -3,6 +3,7 @@
 metro::Benchmark::Benchmark(metro::Params max_params) {
     this->metro = new Metro();
     this->max_params = max_params;
+    std::memset(this->disabled_methods, false, CALLBACKS_COUNT * sizeof(this->disabled_methods));
 }
 
 std::vector<metro::BenchmarkResult> metro::Benchmark::getResults(RouteSearchMethod method) {
@@ -65,6 +66,8 @@ void metro::Benchmark::run(bool *stop) {
         for (int i = 0; i < ROUTE_SEARCH_METHOD_COUNT; i++) {
             if (disabled_methods[STUPID]) break;
             auto method = static_cast<RouteSearchMethod>(i);
+            if (disabled_methods[method]) continue;
+            if (disabled_methods[STUPID]) continue;
             if (method == STUPID) continue;
             for (int j = 0; j < routes.at(method).size(); j++) {
                 for (int k = 0; k < routes.at(method).at(j).size(); k++) {
