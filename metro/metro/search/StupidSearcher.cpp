@@ -46,7 +46,7 @@ namespace metro {
             }
             int route_len = 0;
             for (int i = 0; i < route.size() - 1; i++) {
-                route_len += getDistanceSquared(route.at(i)->pos, route.at(i + 1)->pos);
+                route_len += getDistance(route.at(i)->pos, route.at(i + 1)->pos);
             }
             if (route_len < min_route_len) {
                 min_route_len = route_len;
