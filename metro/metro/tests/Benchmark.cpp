@@ -39,17 +39,14 @@ void metro::Benchmark::run(bool *stop) {
             int stations_count_cb_param = 0;
 #endif
             int Z = 0;
+            auto start = std::chrono::high_resolution_clock::now();
             for (int j = 0; j < metro->stations.size(); j++) {
                 for (int k = 0; k < metro->stations.size(); k++, Z++) {
                     if (stop && *stop) return;
                     if (j == k) continue;
-                    auto start = std::chrono::high_resolution_clock::now();
                     searcher->findShortestRoute({&metro->stations.at(j), &metro->stations.at(k)},
                                                 &routes.at(method).at(Z),
                                                 stop);
-                    auto end = std::chrono::high_resolution_clock::now();
-                    auto search_time = end - start;
-                    time += static_cast<double>(search_time / std::chrono::milliseconds(1));
                 }
 #ifndef NO_STATION_CALLBACK
                 stations_count_cb_param++;
@@ -60,6 +57,9 @@ void metro::Benchmark::run(bool *stop) {
                                                    cb_emitter_ptr[CALLBACK_STATION_COUNT]);
 #endif
             }
+            auto end = std::chrono::high_resolution_clock::now();
+            auto search_time = end - start;
+            time = static_cast<double>(search_time / std::chrono::milliseconds(1));
             results[method].push_back({
                                               params,
                                               time

@@ -8,6 +8,15 @@
 #include "../Utils.h"
 
 namespace metro {
+    struct Vertex {
+        Station *s;
+        int g;
+        int h;
+        Vertex *parent;
+
+        Vertex(Station *s, int g, int h, Vertex *parent);
+    };
+
     class AStarSearcher : public ISearcher {
     protected:
         Station *begin;
@@ -19,20 +28,13 @@ namespace metro {
 
         bool AStarAlg(std::vector<Station *> *route);
 
+        std::vector<Vertex *> vertexes;
+
     public:
         bool findShortestRoute(const std::vector<Station *> &targetStations, std::vector<Station *> *route,
                                bool *stop = nullptr) override;
 
         ~AStarSearcher() override;
-    };
-
-    struct Vertex {
-        Station *s;
-        int g;
-        int h;
-        Vertex *parent;
-
-        Vertex(Station *s, int g, int h, Vertex *parent);
     };
 }
 

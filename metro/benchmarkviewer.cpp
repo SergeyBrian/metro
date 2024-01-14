@@ -27,7 +27,7 @@ BenchmarkViewer::BenchmarkViewer(metro::Benchmark *benchmark, QWidget *parent)
             continue;
         }
         for (auto &result: results) {
-            double time = result.time / 1000;
+            double time = result.time;
             if (time > max_time) max_time = time;
             y.push_back(time);
             x.push_back(result.params.stations_count);

@@ -27,6 +27,7 @@ namespace metro {
         int heuristicCost(Station *a);
 
         std::unordered_map<int, bool> visited;
+        std::vector<Vertex *> vertexes;
 
     public:
         ~MoscowStarSearcher() override;

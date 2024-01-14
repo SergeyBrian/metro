@@ -10,6 +10,10 @@ bool metro::MoscowStarSearcher::findShortestRoute(const std::vector<Station *> &
     this->stop = stop;
     if (!prep_done) prepare();
     bool result = MSAlg(route);
+    for (auto vertex: vertexes) {
+        delete vertex;
+    }
+    vertexes.clear();
     return result;
 }
 
@@ -51,6 +55,7 @@ bool metro::MoscowStarSearcher::MSAlg(std::vector<Station *> *route) {
             heuristicCost(begin),
             nullptr
     ));
+    vertexes.push_back(priority_queue.back());
     while (!priority_queue.empty()) {
         if (stop && *stop) return false;
         Vertex *current = priority_queue.back();
@@ -74,6 +79,7 @@ bool metro::MoscowStarSearcher::MSAlg(std::vector<Station *> *route) {
                     heuristicCost(station),
                     current
             ));
+            vertexes.push_back(priority_queue.back());
         }
         std::sort(priority_queue.begin(), priority_queue.end(), [](Vertex const *a, Vertex const *b) {
             return a->g + a->h > b->g + b->h;
