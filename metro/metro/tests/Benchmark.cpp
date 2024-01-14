@@ -63,6 +63,7 @@ void metro::Benchmark::run(bool *stop) {
             delete searcher;
         }
         for (int i = 0; i < ROUTE_SEARCH_METHOD_COUNT; i++) {
+            if (disabled_methods[STUPID]) break;
             auto method = static_cast<RouteSearchMethod>(i);
             if (method == STUPID) continue;
             for (int j = 0; j < routes.at(method).size(); j++) {
