@@ -75,7 +75,7 @@ bool metro::MoscowStarSearcher::MSAlg(std::vector<Station *> *route) {
             if (visited.contains(station->id)) continue;
             priority_queue.push_back(new Vertex(
                     station,
-                    current->g + 5 * getDistanceSquared(station->pos, current->s->pos),
+                    current->g + 5 * getDistance(station->pos, current->s->pos),
                     heuristicCost(station),
                     current
             ));
@@ -114,5 +114,5 @@ void metro::MoscowStarSearcher::prepare() {
 }
 
 int metro::MoscowStarSearcher::heuristicCost(Station *a) {
-    return getDistanceSquared(a->pos, target->pos);
+    return getDistance(a->pos, target->pos);
 }

@@ -14,6 +14,8 @@ namespace metro {
 
     int getDistanceSquared(const Position &a, const Position &b);
 
+    int getDistance(const Position &a, const Position &b);
+
     bool isInOppositeQuadrant(const Position &a, const Position &b, const Position &center);
 
     int distanceToLineSegment(const Position &p, const Position &a, const Position &b);

@@ -33,6 +33,10 @@ namespace metro {
         return dx * dx + dy * dy;
     }
 
+    int getDistance(const Position &a, const Position &b) {
+        return static_cast<int>(std::sqrt(getDistanceSquared(a, b)));
+    }
+
     bool isInOppositeQuadrant(const Position &a, const Position &b, const Position &center) {
         Position a_prime = a - center;
         Position b_prime = b - center;
@@ -86,11 +90,11 @@ namespace metro {
         if (b1.y - a1.y != 0) {
             float q = static_cast<float>(b1.x - a1.x) / static_cast<float>(a1.y - b1.y);
             float sn = static_cast<float>(a2.x - b2.x) + static_cast<float>(a2.y - b2.y) * q;
-            if (sn == 0) return { .x = -1, .y = -1 };
+            if (sn == 0) return {.x = -1, .y = -1};
             float fn = static_cast<float>(a2.x - a1.x) + static_cast<float>(a2.y - a1.y) * q;
             n = fn / sn;
         } else {
-            if (!(a2.y - b2.y)) return { .x = -1, .y = -1 };
+            if (!(a2.y - b2.y)) return {.x = -1, .y = -1};
             n = static_cast<float>(a2.y - a1.y) / static_cast<float>(a2.y - b2.y);
         }
 
@@ -99,12 +103,12 @@ namespace metro {
                 .y = a2.y + static_cast<int>(static_cast<float>(b2.y - a2.y) * n),
         };
 
-        if ( ((result.x > a1.x && result.x < b1.x) || (result.x < a1.x && result.x > b1.x)) &&
-             ((result.y > a1.y && result.y < b1.y) || (result.y < a1.y && result.y > b1.y)) )
+        if (((result.x > a1.x && result.x < b1.x) || (result.x < a1.x && result.x > b1.x)) &&
+            ((result.y > a1.y && result.y < b1.y) || (result.y < a1.y && result.y > b1.y)))
             return result;
 
-        return { .x = -1,
-                 .y = -1
+        return {.x = -1,
+                .y = -1
         };
     }
 }

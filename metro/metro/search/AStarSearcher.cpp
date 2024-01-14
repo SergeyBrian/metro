@@ -38,7 +38,7 @@ namespace metro {
                 if (visited.contains(station->id)) continue;
                 priority_queue.push_back(new Vertex(
                         station,
-                        current->g + 5 * getDistanceSquared(station->pos, current->s->pos),
+                        current->g + 5 * getDistance(station->pos, current->s->pos),
                         heuristicCost(station),
                         current
                 ));
@@ -65,7 +65,7 @@ namespace metro {
     }
 
     int AStarSearcher::heuristicCost(Station *a) {
-        int res = getDistanceSquared(a->pos, target->pos);
+        int res = getDistance(a->pos, target->pos);
         return res;
     }
 }
