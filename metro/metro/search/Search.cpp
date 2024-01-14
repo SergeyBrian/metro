@@ -9,6 +9,8 @@ namespace metro {
                 return new AStarSearcher();
             case A_STAR_IMPROVED:
                 return new AStarImprovedSearcher();
+            case MOSCOW_STAR:
+                return new MoscowStarSearcher();
             default:
                 throw InvalidSearchMethodException();
         }
@@ -18,5 +20,6 @@ namespace metro {
             "Stupid search",
             "A* search",
             "A* improved search",
+            "Moscow* search",
     };
 }

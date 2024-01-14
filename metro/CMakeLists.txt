@@ -78,6 +78,8 @@ set(PROJECT_SOURCES
         lib/qcustomplot.h
         metro/search/AStarImproved.cpp
         metro/search/AStarImproved.h
+        metro/search/MoscowStarSearcher.cpp
+        metro/search/MoscowStarSearcher.h
 )
 
 if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
