@@ -26,7 +26,11 @@ BenchmarkViewer::BenchmarkViewer(metro::Benchmark *benchmark, QWidget *parent)
             reduce++;
             continue;
         }
-        for (auto &result: results) {
+        for (int j = 0; j < results.size() - 1; j++) {
+            metro::BenchmarkResult result = results.at(j);
+            metro::BenchmarkResult next_result = results.at(j + 1);
+            if (result.time > next_result.time) continue;
+
             double time = result.time;
             if (time > max_time) max_time = time;
             y.push_back(time);
@@ -39,7 +43,6 @@ BenchmarkViewer::BenchmarkViewer(metro::Benchmark *benchmark, QWidget *parent)
         plot->graph(i - reduce)->setPen(QColor::fromRgb(color.rgb.r, color.rgb.g, color.rgb.b));
     }
     plot->yAxis->setRange(plot->yAxis->range().lower, max_time);
-//    plot->yAxis->setScaleType(QCPAxis::stLogarithmic);
     showMaximized();
 }
 

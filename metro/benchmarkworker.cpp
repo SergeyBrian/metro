@@ -1,8 +1,13 @@
 #include "benchmarkworker.h"
 
 void BenchmarkWorker::run(bool *stop) {
-    benchmark_obj->run(stop);
-    emit workFinished();
+    try {
+
+        benchmark_obj->run(stop);
+        emit workFinished();
+    } catch (const metro::MethodDidntMatchTheReferenceException &e) {
+        QMessageBox::critical(nullptr, "Error", "Invalid route found");
+    }
     this->thread()->quit();
 }
 
