@@ -3,6 +3,7 @@
 metro::Benchmark::Benchmark(metro::Params max_params) {
     this->metro = new Metro();
     this->max_params = max_params;
+    std::memset(this->disabled_methods, false, ROUTE_SEARCH_METHOD_COUNT * sizeof(this->disabled_methods));
 }
 
 std::vector<metro::BenchmarkResult> metro::Benchmark::getResults(RouteSearchMethod method) {
@@ -34,12 +35,13 @@ void metro::Benchmark::run(bool *stop) {
             if (disabled_methods[method]) continue;
             routes[method] = std::vector<std::vector<Station *>>(metro->stations.size() * metro->stations.size());
             ISearcher *searcher = getSearcher(method);
-            std::chrono::milliseconds time;
+            double time = 0.;
+#ifndef NO_STATION_CALLBACK
             int stations_count_cb_param = 0;
-            auto start = std::chrono::high_resolution_clock::now();
+#endif
             int Z = 0;
+            auto start = std::chrono::high_resolution_clock::now();
             for (int j = 0; j < metro->stations.size(); j++) {
-                if (stop && *stop) return;
                 for (int k = 0; k < metro->stations.size(); k++, Z++) {
                     if (stop && *stop) return;
                     if (j == k) continue;
@@ -47,15 +49,18 @@ void metro::Benchmark::run(bool *stop) {
                                                 &routes.at(method).at(Z),
                                                 stop);
                 }
+#ifndef NO_STATION_CALLBACK
                 stations_count_cb_param++;
                 double stations_count_cb_prcnt = (double) stations_count_cb_param / (double) metro->stations.size();
                 stations_count_cb_prcnt *= 100;
                 cb_fun_ptr[CALLBACK_STATION_COUNT]((int) stations_count_cb_prcnt,
                                                    cb_obj_ptr[CALLBACK_STATION_COUNT],
                                                    cb_emitter_ptr[CALLBACK_STATION_COUNT]);
+#endif
             }
             auto end = std::chrono::high_resolution_clock::now();
-            time = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+            auto search_time = end - start;
+            time = static_cast<double>(search_time / std::chrono::milliseconds(1));
             results[method].push_back({
                                               params,
                                               time
@@ -65,7 +70,7 @@ void metro::Benchmark::run(bool *stop) {
         for (int i = 0; i < ROUTE_SEARCH_METHOD_COUNT; i++) {
             if (disabled_methods[STUPID]) break;
             auto method = static_cast<RouteSearchMethod>(i);
-            if (method == STUPID) continue;
+            if (method == STUPID || disabled_methods[method]) continue;
             for (int j = 0; j < routes.at(method).size(); j++) {
                 for (int k = 0; k < routes.at(method).at(j).size(); k++) {
                     if (routes.at(method).at(j).at(k) != routes.at(STUPID).at(j).at(k)) {
@@ -80,7 +85,6 @@ void metro::Benchmark::run(bool *stop) {
         params.branch_threshold = (params.stations_count > 500) ? 1 : 3;
         params.min_distance = (params.stations_count > 200) ? 0 : 3;
         params.intersect_threshold = (params.stations_count > 500) ? 3 : 5;
-        printf("%d\n", (int) (((double) params.stations_count / (double) max_params.stations_count) * 100));
         cb_fun_ptr[CALLBACK_STAGE]((int) (((double) params.stations_count / (double) max_params.stations_count) * 100),
                                    cb_obj_ptr[CALLBACK_STAGE], cb_emitter_ptr[CALLBACK_STAGE]);
     }
@@ -93,7 +97,7 @@ void metro::Benchmark::run(bool *stop) {
         std::vector<metro::BenchmarkResult> rr = this->getResults(method);
         printf("%s\n", metro::search_method_name[i].c_str());
         for (const auto &result: rr) {
-            printf("\tStations: %d time: %lld\n", result.params.stations_count, result.time.count());
+            printf("\tStations: %d time: %f\n", result.params.stations_count, result.time);
         }
     }
 }

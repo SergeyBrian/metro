@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QThread>
+#include <QMessageBox>
 
 #include "metro/tests/Tests.h"
 #include "benchmarkupdatemitter.h"

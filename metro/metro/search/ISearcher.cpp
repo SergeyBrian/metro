@@ -1,7 +1,5 @@
 #include "ISearcher.h"
 
 namespace metro {
-    ISearcher::~ISearcher() {
-
-    }
+    ISearcher::~ISearcher() = default;
 }

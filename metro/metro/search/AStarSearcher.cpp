@@ -18,6 +18,7 @@ namespace metro {
                 heuristicCost(begin),
                 nullptr
         ));
+        vertexes.push_back(priority_queue.back());
         while (!priority_queue.empty()) {
             if (stop && *stop) return false;
             Vertex *current = priority_queue.back();
@@ -41,6 +42,7 @@ namespace metro {
                         heuristicCost(station),
                         current
                 ));
+                vertexes.push_back(priority_queue.back());
             }
             std::sort(priority_queue.begin(), priority_queue.end(), [](Vertex const *a, Vertex const *b) {
                 return a->g + a->h > b->g + b->h;
@@ -55,12 +57,15 @@ namespace metro {
         target = targetStations.back();
         this->stop = stop;
         bool status = AStarAlg(route);
+        for (auto vertex: vertexes) {
+            delete vertex;
+        }
+        vertexes.clear();
         return status;
     }
 
     int AStarSearcher::heuristicCost(Station *a) {
         int res = getDistanceSquared(a->pos, target->pos);
-//        if (a->branch_id == target->branch_id) res -= 10;
         return res;
     }
 }
