@@ -1,82 +1,74 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
+#include "metro/Exceptions.h"
 
-
-void MainWindow::HandleStationButtonPress(station_id id) {
-    qDebug() << stationList->getStation(id)->name.c_str() << "\n";
-    switch (navState) {
-    case AWAIT_BEGIN:
-        HideAllButtons();
-        ShowButton(id);
-        begin = id;
-        navState = AWAIT_END;
-        break;
-    case AWAIT_END:
-        Route *route = navigator->findShortestRoute(begin, id);
-        std::string routeString = "";
-        for (int i  = 0; i < route->path.size(); i++) {
-            ShowButton(route->path[i]);
-            routeString += stationList->getStation(route->path[i])->name;
-            if (i < route->path.size() - 1) routeString += " -> ";
-        }
-        qDebug() << routeString.c_str();
-        navigator->forgetRoutes();
-        navState = AWAIT_BEGIN;
-        break;
-    }
-}
-
-void MainWindow::HideAllButtons() {
-    for (auto const& button : stationButtonPtrs) {
-        ShowButton(button.first, 0);
-    }
-}
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
-{
+        : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
-    QPixmap subwayMapPixmap(":/image/img/bg.jpg");
-    QLabel* subwayMapLabel = new QLabel(this);
-    subwayMapLabel->setPixmap(subwayMapPixmap);
-    subwayMapLabel->setScaledContents(true);
-    setCentralWidget(subwayMapLabel);
-    setWindowFlags(windowFlags() & ~Qt::WindowMaximizeButtonHint);
-    QSize imageSize = subwayMapPixmap.size();
-    int windowWidth = imageSize.width() + 16;
-    int windowHeight = imageSize.height() + 16;
-    setFixedSize(windowWidth, windowHeight);
-    navState = AWAIT_BEGIN;
-
-    stationList = new StationList();
-    navigator = new Navigator(stationList);
-
-    for (int i = 0; i < this->stationButtons.size(); i++) {
-        StationButton buttonInfo = stationButtons[i];
-        QPushButton *button = new QPushButton("", subwayMapLabel);
-        button->setGeometry(buttonInfo.coords.first, buttonInfo.coords.second, 20, 20);
-        button->setStyleSheet("QPushButton { background-color: transparent; border: none; }");
-        this->stationButtonPtrs.insert(std::make_pair(buttonInfo.id, button));
-        connect(button, &QPushButton::clicked, [=](){
-            HandleStationButtonPress(buttonInfo.id);
-        });
+    if (QApplication::arguments().size() > 1) {
+        try {
+            QFileInfo fileInfo(QApplication::arguments().at(1));
+            openFile(fileInfo.fileName(), fileInfo.baseName());
+        } catch (const std::runtime_error &e) {
+            QMessageBox::critical(this, "Error", "Couldn't open file");
+        }
     }
+    QString newText = "New: " +
+                      ui->actionNew->shortcut().toString(QKeySequence::NativeText) +
+                      "\nOpen: " +
+                      ui->actionOpen->shortcut().toString(QKeySequence::NativeText);
+    ui->noFileOpen->setText(newText);
+    showRecentFilesMenu(ui->menuFile, this);
 }
 
-void MainWindow::ShowButton(station_id id, bool show) {
-    QPushButton *button = stationButtonPtrs.find(id)->second;
-    if (show) {
-        button->setStyleSheet("QPushButton { background-color: #ffe600; }");
-    } else {
-        button->setStyleSheet("QPushButton { background-color: transparent; border: none; }");
-    }
-}
-
-MainWindow::~MainWindow()
-{
+MainWindow::~MainWindow() {
     delete ui;
-    delete stationList;
-    delete navigator;
+}
+
+
+void MainWindow::on_actionNew_triggered() {
+    genDialog = new GenerateDialog(this);
+    if (!genDialog->exec()) return;
+
+    auto metro = new metro::Metro();
+    metro->generate(genDialog->getParams());
+    auto metroWindow = new MetroWindow(metro);
+    this->close();
+    metroWindow->activateWindow();
+    metroWindow->showMaximized();
+}
+
+void MainWindow::on_actionOpen_triggered() {
+    QString filename;
+    QString filename_base;
+    if (!selectFileOpen(&filename, &filename_base)) return;
+    openFile(filename, filename_base);
+}
+
+void MainWindow::openFile(const QString &filename, const QString &filename_base) {
+    MetroWindow *metroWindow;
+    try {
+        metroWindow = new MetroWindow(filename, filename_base);
+    } catch (const std::runtime_error &e) {
+        return;
+    }
+
+    this->close();
+    metroWindow->activateWindow();
+    metroWindow->showMaximized();
+    addToRecentFiles(filename);
+}
+
+void MainWindow::on_actionOpenRecentTriggered() {
+    auto action = dynamic_cast<QAction *>(QObject::sender());
+    auto filename = action->data().value<QString>();
+    openFile(filename, QFileInfo(filename).baseName());
+}
+
+
+void MainWindow::on_actionNavigator_benchmark_triggered() {
+    auto benchmarkDialog = new BenchmarkDialog(this);
+    benchmarkDialog->show();
 }
 
