@@ -3,6 +3,7 @@
 metro::Benchmark::Benchmark(metro::Params max_params) {
     this->metro = new Metro();
     this->max_params = max_params;
+    std::memset(this->disabled_methods, false, ROUTE_SEARCH_METHOD_COUNT * sizeof(this->disabled_methods));
 }
 
 std::vector<metro::BenchmarkResult> metro::Benchmark::getResults(RouteSearchMethod method) {
