@@ -76,6 +76,8 @@ set(PROJECT_SOURCES
         benchmarkupdatemitter.h
         lib/qcustomplot.cpp
         lib/qcustomplot.h
+        metro/search/MoscowStarSearcher.cpp
+        metro/search/MoscowStarSearcher.h
 )
 
 if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)

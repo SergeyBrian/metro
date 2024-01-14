@@ -38,11 +38,12 @@ void metro::Benchmark::run(bool *stop) {
             int stations_count_cb_param = 0;
             auto start = std::chrono::high_resolution_clock::now();
             int Z = 0;
-            for (int j = 0; j < metro->stations.size(); j++) {
-                if (stop && *stop) return;
-                for (int k = 0; k < metro->stations.size(); k++, Z++) {
+            int j = 0;
+            for (j = 0; j < metro->stations.size(); j++) {
+                if (metro->stations.at(j).branch_id == -1) continue;
+                for (int k = 1; k < metro->stations.size(); k++, Z++) {
                     if (stop && *stop) return;
-                    if (j == k) continue;
+                    if (metro->stations.at(k).branch_id == -1) continue;
                     searcher->findShortestRoute({&metro->stations.at(j), &metro->stations.at(k)},
                                                 &routes.at(method).at(Z),
                                                 stop);
@@ -54,17 +55,22 @@ void metro::Benchmark::run(bool *stop) {
                                                    cb_obj_ptr[CALLBACK_STATION_COUNT],
                                                    cb_emitter_ptr[CALLBACK_STATION_COUNT]);
             }
+
             auto end = std::chrono::high_resolution_clock::now();
             time = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+            if (time.count() > 10000) {
+                saveToFile("problem.mettro", metro);
+            }
             results[method].push_back({
                                               params,
                                               time
                                       });
             delete searcher;
         }
-        for (int i = 0; i < ROUTE_SEARCH_METHOD_COUNT; i++) {
+        for (int i = 0; !disabled_methods[metro::STUPID] && i < ROUTE_SEARCH_METHOD_COUNT; i++) {
             auto method = static_cast<RouteSearchMethod>(i);
             if (method == STUPID) continue;
+            if (disabled_methods[method]) continue;
             for (int j = 0; j < routes.at(method).size(); j++) {
                 for (int k = 0; k < routes.at(method).at(j).size(); k++) {
                     if (routes.at(method).at(j).at(k) != routes.at(STUPID).at(j).at(k)) {

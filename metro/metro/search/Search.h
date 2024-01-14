@@ -1,14 +1,16 @@
 #ifndef METRO_SEARCH_H
 #define METRO_SEARCH_H
 
+#include "Exceptions.h"
 #include "StupidSearcher.h"
 #include "AStarSearcher.h"
-#include "Exceptions.h"
+#include "MoscowStarSearcher.h"
 
 namespace metro {
     enum RouteSearchMethod {
         STUPID,
         A_STAR,
+        MOSCOW_STAR,
         ROUTE_SEARCH_METHOD_COUNT
     };
 

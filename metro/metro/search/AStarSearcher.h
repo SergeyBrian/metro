@@ -12,7 +12,7 @@ namespace metro {
         Station *begin;
         Station *target;
 
-        int heuristicCost(Station *a);
+        virtual int heuristicCost(Station *a);
 
         std::unordered_map<int, bool> visited;
 
