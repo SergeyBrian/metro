@@ -67,26 +67,21 @@ void metro::Benchmark::run(bool *stop) {
                                       });
             delete searcher;
         }
-//        for (int i = 0; i < ROUTE_SEARCH_METHOD_COUNT; i++) {
-//            if (disabled_methods[STUPID]) break;
-//            auto method = static_cast<RouteSearchMethod>(i);
-//            if (method == STUPID || disabled_methods[method]) continue;
-//            for (int j = 0; j < routes.at(method).size(); j++) {
-//                for (int k = 0; k < routes.at(method).at(j).size(); k++) {
-//                    if (routes.at(method).at(j).at(k) != routes.at(STUPID).at(j).at(k)) {
-//                        printf("Not matching route found\n");
-//                        printf("%s -> %s\n", routes.at(method).at(j).front()->name.c_str(),
-//                               routes.at(method).at(j).back()->name.c_str());
-//                        saveToFile("../../../wrong-route.mettro", metro);
-//                        for (const auto &s1: routes.at(method).at(j)) printf("%s -> ", s1->name.c_str());
-//                        printf("\n");
-//                        for (const auto &s2: routes.at(STUPID).at(j)) printf("%s -> ", s2->name.c_str());
-//                        printf("\n");
-//                        throw MethodDidntMatchTheReferenceException(method, STUPID);
-//                    }
-//                }
-//            }
-//        }
+        for (int i = 0; i < ROUTE_SEARCH_METHOD_COUNT; i++) {
+            if (disabled_methods[STUPID]) break;
+            auto method = static_cast<RouteSearchMethod>(i);
+            if (method == STUPID || disabled_methods[method]) continue;
+            for (int j = 0; j < routes.at(method).size(); j++) {
+                for (int k = 0; k < routes.at(method).at(j).size(); k++) {
+                    if (routes.at(method).at(j).at(k) != routes.at(STUPID).at(j).at(k)) {
+                        if (routes.at(STUPID).at(j).front() == routes.at(method).at(j).front() &&
+                            routes.at(STUPID).at(j).back() == routes.at(method).at(j).back()) {
+                            throw MethodDidntMatchTheReferenceException(method, STUPID);
+                        }
+                    }
+                }
+            }
+        }
 
         params.stations_count += 10;
         params.branch_count = params.stations_count / 3;
