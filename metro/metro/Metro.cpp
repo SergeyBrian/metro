@@ -131,15 +131,61 @@ namespace metro {
                 Position intersection = getLineSegmentsIntersection(branch->begin->pos, branch->end->pos,
                                                                     other_branch->begin->pos, other_branch->end->pos);
                 if (intersection.x == -1) continue;
+
+                Station *stationFirst = nullptr;
+                Station *stationSecond = nullptr;
+                for (auto &station: stations) {
+                    if (station.branch_id != branch->id) continue;
+                    int offset = squareRadius(intersection, station.pos);
+                    if (offset <= params.min_distance * params.min_distance) {
+                        station.pos = intersection;
+                        stationFirst = &station;
+                        break;
+                    }
+                }
+                for (auto &other_station: stations) {
+                    if (other_station.branch_id != other_branch->id) continue;
+                    int offset = squareRadius(intersection, other_station.pos);
+                    if (offset <= params.min_distance * params.min_distance) {
+                        other_station.pos = intersection;
+                        stationSecond = &other_station;
+                        break;
+                    }
+                }
+                if (stationFirst && stationSecond) {
+                    std::printf("[INFO] intersect %s and %s\n", stationFirst->name.c_str(),
+                                stationSecond->name.c_str());
+                    bindStations(stationFirst, stationSecond);
+                    branches_connections[stationFirst->branch_id][stationSecond->branch_id] = true;
+                    branches_connections[stationSecond->branch_id][stationFirst->branch_id] = true;
+                    continue;
+                }
+                if (stationFirst || stationSecond) {
+                    if (stationFirst == nullptr) stationFirst = stationSecond;
+                    for (auto &station: stations) {
+                        if (station.branch_id != -1) continue;
+                        station.branch_id = other_branch->id;
+                        station.pos = intersection;
+                        std::printf("[INFO] intersect %s and %s\n", stationFirst->name.c_str(),
+                                    station.name.c_str());
+                        bindStations(&station, stationFirst);
+                        branches_connections[stationFirst->branch_id][station.branch_id] = true;
+                        branches_connections[station.branch_id][stationFirst->branch_id] = true;
+                        break;
+                    }
+                    continue;
+                }
+
                 for (auto &station: stations) {
                     if (station.branch_id != -1) continue;
                     for (auto &other_station: stations) {
                         if (other_station.branch_id != -1) continue;
                         if (station.id == other_station.id) continue;
-                        station.branch_id = branch->id;
-                        other_station.branch_id = other_branch->id;
                         station.pos = intersection;
                         other_station.pos = intersection;
+                        station.branch_id = branch->id;
+                        other_station.branch_id = other_branch->id;
+                        std::printf("[INFO] intersect %s and %s\n", station.name.c_str(), other_station.name.c_str());
                         bindStations(&station, &other_station);
                         branches_connections[station.branch_id][other_station.branch_id] = true;
                         branches_connections[other_station.branch_id][station.branch_id] = true;
@@ -187,9 +233,9 @@ namespace metro {
                 if (offset > params.intersect_threshold * params.intersect_threshold) continue;
                 std::printf("[INFO] intersect %s and %s\n", station.name.c_str(), other_station.name.c_str());
                 bindStations(&station, &other_station);
+                other_station.pos = station.pos;
                 branches_connections[station.branch_id][other_station.branch_id] = true;
                 branches_connections[other_station.branch_id][station.branch_id] = true;
-                station.pos = other_station.pos;
             }
         }
     }
