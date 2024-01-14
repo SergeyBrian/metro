@@ -25,7 +25,7 @@ namespace metro {
 
     class Benchmark {
         Metro *metro;
-        Params max_params = {.stations_count = 1000};
+        Params max_params{};
         std::unordered_map<RouteSearchMethod, std::vector<BenchmarkResult>> results;
         CallbackFunc cb_fun_ptr[CALLBACKS_COUNT];
         void *cb_obj_ptr[CALLBACKS_COUNT];
@@ -33,7 +33,9 @@ namespace metro {
         bool disabled_methods[ROUTE_SEARCH_METHOD_COUNT];
 
     public:
-        Benchmark(Params max_params);
+        explicit Benchmark(Params max_params = {
+                .stations_count = 1000,
+        });
 
         void run(bool *stop = nullptr);
 
